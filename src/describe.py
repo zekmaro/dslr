@@ -1,6 +1,7 @@
 import sys
 import os
 import pandas as pd
+from histogram import plot_histogram
 
 
 def describe(df: pd.DataFrame) -> pd.DataFrame:
@@ -8,9 +9,31 @@ def describe(df: pd.DataFrame) -> pd.DataFrame:
 	if not isinstance(df, pd.DataFrame):
 		raise TypeError("df must be a pandas DataFrame")
 
-	described_df = pd.DataFrame()
-	described_df["column"] = df.columns
-	described_df.index = ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']
+	num_columns = [col for col in df.columns if df[col].dtype in [int, float]]
+
+	described_df = pd.DataFrame(
+		index=['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'cv'],
+		columns=num_columns
+	)
+
+	for col in df.columns:
+		dtype = df[col].dtype
+		# plot_histogram(df, col)
+
+		if dtype == int or dtype == float:
+			described_df[col] = [
+				df[col].count(),
+				df[col].mean(),
+				df[col].std(),
+				df[col].min(),
+				df[col].quantile(0.25),
+				df[col].median(),
+				df[col].quantile(0.75),
+				df[col].max(),
+				df[col].std() / df[col].mean()
+			]
+
+	print(described_df)
 
 
 def main():
