@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from typing import List
 
 
 def plot_features(data: pd.DataFrame, feature_1: pd.DataFrame, feature_2: pd.DataFrame):
@@ -30,10 +29,12 @@ def find_similar_features(df: pd.DataFrame):
 			"std": df[col].std()
 		} for col in num_columns
 	}
+	MEAN_THRESHOLD = 1
+	STD_THRESHOLD = 1
 	similar_features = []
 	for col1, data1 in col_data.items():
 		for col2, data2 in col_data.items():
-			if col1 != col2 and abs(data1["mean"] - data2["mean"]) < 1 and abs(data1["std"] - data2["std"]) < 1:
+			if col1 != col2 and abs(data1["mean"] - data2["mean"]) < MEAN_THRESHOLD and abs(data1["std"] - data2["std"]) < STD_THRESHOLD:
 				if not (col1, col2) in similar_features and not (col2, col1) in similar_features:
 					similar_features.append((col1, col2))
 					plot_features(df, col1, col2)
