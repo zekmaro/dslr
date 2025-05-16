@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from statistical_methods import calculate_mean
+from statistical_methods import calculate_mean, calculate_median, calculate_quartile, calculate_variance, calculate_stddev
+
 
 def plot_histogram(df: pd.DataFrame, column: str, bins: int = 10) -> None:
 	"""Plot a histogram of a specified column in a DataFrame.
@@ -41,8 +42,20 @@ def get_course_scores_per_house(df: pd.DataFrame) -> None:
 				if pd.notna(row[col]):
 					courses_score_per_house[col][row["Hogwarts House"]].append(row[col])
 
+	homo_courses = []
 	for course, houses in courses_score_per_house.items():
 		print(f"Course: {course}")
+		counter = 0
 		for house, scores in houses.items():
-			print(f"\t{house}: {calculate_mean(*scores)}")
-			# print(f"\t{house}: {scores}")
+			mean = calculate_mean(*scores)
+			std = calculate_stddev(*scores)
+			cv = std / mean if mean != 0 else 0
+			print(f"\t{house}: mean is {mean}, std is {std}, CV is {cv}")
+			if cv < 0.2:
+				counter += 1
+			if counter == 4:
+				homo_courses.append(course)
+	
+	print(homo_courses)
+	for course in homo_courses:
+		plot_histogram(df, course)
