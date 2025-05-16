@@ -30,7 +30,6 @@ def describe(df: pd.DataFrame) -> pd.DataFrame:
 				df[col].median(),
 				df[col].quantile(0.75),
 				df[col].max(),
-				df[col].std() / df[col].mean()
 			]
 
 	print(described_df)

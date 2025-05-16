@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from statistical_methods import calculate_mean
 
 def plot_histogram(df: pd.DataFrame, column: str, bins: int = 10) -> None:
 	"""Plot a histogram of a specified column in a DataFrame.
@@ -20,3 +20,29 @@ def plot_histogram(df: pd.DataFrame, column: str, bins: int = 10) -> None:
 	plt.ylabel("Frequency")
 	plt.grid(axis='y', alpha=0.75)
 	plt.show()
+
+
+def get_course_scores_per_house(df: pd.DataFrame) -> None:
+	"""Find which Hogwarts course has a homogeneous score distribution between all four houses"""
+	courses = [col for col in df.columns if df[col].dtype in [int, float]]
+
+	courses_score_per_house = {
+		course: {
+			"Ravenclaw": [],
+			"Hufflepuff": [],
+			"Gryffindor": [],
+			"Slytherin": []
+		} for course in courses
+	}
+
+	for col in df.columns:
+		if col in courses:
+			for _, row in df.iterrows():
+				if pd.notna(row[col]):
+					courses_score_per_house[col][row["Hogwarts House"]].append(row[col])
+
+	for course, houses in courses_score_per_house.items():
+		print(f"Course: {course}")
+		for house, scores in houses.items():
+			print(f"\t{house}: {calculate_mean(*scores)}")
+			# print(f"\t{house}: {scores}")
