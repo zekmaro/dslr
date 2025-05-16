@@ -55,7 +55,7 @@ def get_course_scores_per_house(df: pd.DataFrame) -> None:
 				counter += 1
 			if counter == 4:
 				homo_courses.append(course)
-	
+
 	print(homo_courses)
 	for course in homo_courses:
 		plot_histogram(df, course)
