@@ -1,8 +1,8 @@
-from load_csv import load
-from describe import describe
-from histogram import get_course_scores_per_house
-from scatter_plot import find_similar_features
-from pair_plot import plot_pairwise
+from utils.load_csv import load
+from scripts.describe import describe
+from scripts.histogram import get_course_scores_per_house
+from scripts.scatter_plot import find_similar_features
+from scripts.pair_plot import plot_pairwise
 
 
 def main():

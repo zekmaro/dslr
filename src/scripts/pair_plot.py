@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from header import HOUSE_COLORS
+from utils.header import HOUSE_COLORS
 
 
 def plot_pairwise(df: pd.DataFrame) -> None:

@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from statistical_methods import calculate_mean, calculate_median, calculate_quartile, calculate_variance, calculate_stddev
+from utils.statistical_methods import calculate_mean, calculate_median, calculate_quartile, calculate_variance, calculate_stddev
 
 
 def plot_histogram(df: pd.DataFrame, column: str, bins: int = 10) -> None:
