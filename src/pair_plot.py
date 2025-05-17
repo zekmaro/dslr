@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import HOUSE_COLORS
+from header import HOUSE_COLORS
 
 
 def plot_pairwise(df: pd.DataFrame) -> None:
@@ -9,7 +9,6 @@ def plot_pairwise(df: pd.DataFrame) -> None:
 
 	Args:
 		df (pd.DataFrame): The DataFrame containing the data.
-		columns (list): List of column names to plot.
 	"""
 	sns.pairplot(
 		df,
@@ -17,4 +16,3 @@ def plot_pairwise(df: pd.DataFrame) -> None:
 		palette=HOUSE_COLORS
 	)
 	plt.savefig('images/pair_plot.png')
-	plt.show()
