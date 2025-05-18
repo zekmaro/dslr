@@ -1,8 +1,11 @@
-from utils.load_csv import load
+from src.utils.load_csv import load
+from src.utils.header import DATASET_PATH, DROP_COLS
+from src.models.train.features import get_best_features
 
 
 def main():
-	df = load("datasets/dataset_train.csv")
+	df = load(DATASET_PATH)
+	get_best_features(df, DROP_COLS)
 	
 
 
