@@ -1,25 +1,21 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 from utils.statistical_methods import calculate_mean, calculate_median, calculate_quartile, calculate_variance, calculate_stddev
 
 
-def plot_histogram(df: pd.DataFrame, column: str, bins: int = 10) -> None:
-	"""Plot a histogram of a specified column in a DataFrame.
-
-	Args:
-		df (pd.DataFrame): The DataFrame containing the data.
-		column (str): The column name to plot.
-		bins (int, optional): The number of bins for the histogram. Defaults to 10.
+def plot_feature_distribution(df: pd.DataFrame, feature: str) -> None:
 	"""
-	if column not in df.columns:
-		raise ValueError(f"Column '{column}' does not exist in the DataFrame.")
-
-	plt.figure(figsize=(10, 6))
-	plt.hist(df[column], bins=bins, edgecolor='black')
-	plt.title(f"Histogram of {column}")
-	plt.xlabel(column)
-	plt.ylabel("Frequency")
-	plt.grid(axis='y', alpha=0.75)
+	Plot the distribution of a feature.
+	:param df: DataFrame
+	:param feature: Feature to plot
+	"""
+	plt.figure(figsize=(8, 4))
+	sns.histplot(data=df, x=feature, hue='Hogwarts House', kde=True, element='step')
+	plt.title(f'Distribution of {feature} by House')
+	plt.xlabel(feature)
+	plt.ylabel('Frequency')
+	plt.grid(True)
 	plt.show()
 
 
@@ -58,4 +54,4 @@ def get_course_scores_per_house(df: pd.DataFrame) -> None:
 
 	print(homo_courses)
 	for course in homo_courses:
-		plot_histogram(df, course)
+		plot_feature_distribution(df, course)
