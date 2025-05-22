@@ -7,6 +7,13 @@ HOUSE_COLORS = {
 	"Hufflepuff": "orange"
 }
 
+HOUSE_MAP = {
+	"Gryffindor": 0,
+	"Slytherin": 1,
+	"Ravenclaw": 2,
+	"Hufflepuff": 3
+}
+
 DROP_COLS = [
 	"Index", "Hogwarts House", "First Name",
 	"Last Name", "Birthday", "Best Hand"
