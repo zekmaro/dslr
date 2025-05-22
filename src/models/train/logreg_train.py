@@ -8,7 +8,9 @@ def main():
 	df = load(DATASET_PATH)
 	best_features = get_best_features(df, DROP_COLS)
 	print()
-	redundant = rm_redundant_features(df, best_features)
+	features_to_remove = rm_redundant_features(df, best_features)
+	training_features = [col for col in df.columns if df[col].dtype in ['int64', 'float64'] and col not in DROP_COLS and col not in features_to_remove]
+	print(f"Numerous features: {training_features}")
 
 if __name__ == "__main__":
 	main()

@@ -35,9 +35,11 @@ def rm_redundant_features(df, best_features: list[tuple[pd.DataFrame, pd.DataFra
 			individual_features.add(feature2)
 
 	print(f"Individual features: {individual_features}")
-	for feature in individual_features:
-		plot_feature_distribution(df, feature)
+	# for feature in individual_features:
+	# 	plot_feature_distribution(df, feature)
 
+	features_to_remove = ('Astronomy', 'Charms', 'Transfiguration', 'Potions', 'Flying')
+	return features_to_remove
 
 
 def get_best_features(df: pd.DataFrame, drop_columns: list[str]) -> list[tuple[pd.DataFrame, pd.DataFrame, float]]:
