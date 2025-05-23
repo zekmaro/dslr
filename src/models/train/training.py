@@ -19,4 +19,3 @@ def gradient_descent(X, y, alpha=0.1, epochs=1000):
         gradient = (1/m) * (X.T @ (h - y))
         theta -= alpha * gradient
     return theta
-
