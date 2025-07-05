@@ -1,6 +1,14 @@
 import sys
 import os
 import pandas as pd
+from utils.statistical_methods import (
+    count,
+    calculate_mean,
+    calculate_median,
+    calculate_quartile,
+    calculate_variance,
+    calculate_stddev
+)
 
 
 def describe(df: pd.DataFrame) -> pd.DataFrame:
@@ -19,15 +27,17 @@ def describe(df: pd.DataFrame) -> pd.DataFrame:
 		dtype = df[col].dtype
 
 		if dtype == int or dtype == float:
+			clean_col = df[col].dropna()
+			quart_tuple = calculate_quartile(*clean_col)
 			described_df[col] = [
-				df[col].count(),
-				df[col].mean(),
-				df[col].std(),
-				df[col].min(),
-				df[col].quantile(0.25),
-				df[col].median(),
-				df[col].quantile(0.75),
-				df[col].max(),
+				count(*clean_col),
+				calculate_mean(*clean_col),
+                calculate_stddev(*clean_col),
+				clean_col.min(),
+				quart_tuple[0],
+				calculate_median(*clean_col),
+				quart_tuple[1],
+				clean_col.max(),
 			]
 
 	print(described_df)

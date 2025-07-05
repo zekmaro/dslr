@@ -1,5 +1,5 @@
 from src.utils.load_csv import load
-from src.utils.header import DATASET_PATH, DROP_COLS, HOUSE_MAP, TEST_DATASET_PATH
+from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, TEST_DATASET_PATH
 from src.models.train.features import get_best_features, rm_redundant_features
 from src.models.train.training import gradient_descent
 import numpy as np
@@ -35,7 +35,7 @@ def predict_test_data(test_df, training_features, output_weights):
 
 
 def main():
-	df = load(DATASET_PATH)
+	df = load(TRAIN_DATASET_PATH)
 	test_df = load(TEST_DATASET_PATH)
 	best_features = get_best_features(df, DROP_COLS)
 	print()

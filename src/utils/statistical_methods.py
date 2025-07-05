@@ -1,6 +1,11 @@
 from typing import Any
 
 
+def count(*args: Any) -> int:
+    """Return number of non-NA/null observations in the Series."""
+    return sum(1 for arg in args if arg is not None and arg == arg)
+
+
 def calculate_mean(*args: Any) -> float:
 	"""Calculate the mean of a list of numbers."""
 	if len(args) == 0:
@@ -24,7 +29,7 @@ def calculate_quartile(*args: Any) -> tuple[float, float]:
 	n = len(sorted_args)
 	q1 = sorted_args[n // 4]
 	q3 = sorted_args[3 * n // 4]
-	return [q1, q3]
+	return (q1, q3)
 
 
 def calculate_variance(*args: Any) -> float:

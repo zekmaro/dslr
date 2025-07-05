@@ -1,4 +1,4 @@
-DATASET_PATH = "datasets/dataset_train.csv"
+TRAIN_DATASET_PATH = "datasets/dataset_train.csv"
 TEST_DATASET_PATH = "datasets/dataset_test.csv"
 
 HOUSE_COLORS = {
