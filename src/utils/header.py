@@ -1,5 +1,6 @@
 TRAIN_DATASET_PATH = "datasets/dataset_train.csv"
 TEST_DATASET_PATH = "datasets/dataset_test.csv"
+IMAGE_DEST_PATH = "images/pair_plot.png"
 
 HOUSE_COLORS = {
 	"Gryffindor": "red",

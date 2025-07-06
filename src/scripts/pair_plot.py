@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils.header import HOUSE_COLORS
+from utils.header import HOUSE_COLORS, IMAGE_DEST_PATH
 
 
 def plot_pairwise(df: pd.DataFrame) -> None:
@@ -15,4 +15,4 @@ def plot_pairwise(df: pd.DataFrame) -> None:
 		hue='Hogwarts House',
 		palette=HOUSE_COLORS
 	)
-	plt.savefig('images/pair_plot.png')
+	plt.savefig(IMAGE_DEST_PATH)
