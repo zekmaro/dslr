@@ -12,7 +12,7 @@ def main():
 	# print(df.info())
 	print(df.describe())
 	describe(df)
-	# get_course_scores_per_house(df)
+	get_course_scores_per_house(df)
 	# print(find_similar_features(df))
 	# # plot_pairwise(df)
 
