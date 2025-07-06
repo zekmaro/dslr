@@ -1,15 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from utils.header import CORRELATION_THRESHOLD, HOUSE_COLORS
 
 
 def plot_features(data: pd.DataFrame, feature_1: pd.DataFrame, feature_2: pd.DataFrame):
-	house_colors = {
-		"Gryffindor": "red",
-		"Slytherin": "green",
-		"Ravenclaw": "blue",
-		"Hufflepuff": "orange"
-	}
-	for house, color in house_colors.items():
+	for house, color in HOUSE_COLORS.items():
 		subset = data[data["Hogwarts House"] == house]
 		plt.scatter(subset[feature_1], subset[feature_2], label=house, color=color, alpha=0.6, s=15)
 	plt.xlabel(feature_1)
@@ -21,21 +16,21 @@ def plot_features(data: pd.DataFrame, feature_1: pd.DataFrame, feature_2: pd.Dat
 
 
 def find_similar_features(df: pd.DataFrame):
-	"""Find similar features in a DataFrame based on mean and standard deviation."""
-	num_columns = [col for col in df.columns if df[col].dtype in [int, float]]
-	col_data = {
-		col: {
-			"mean": df[col].mean(),
-			"std": df[col].std()
-		} for col in num_columns
-	}
-	MEAN_THRESHOLD = 1
-	STD_THRESHOLD = 1
-	similar_features = []
-	for col1, data1 in col_data.items():
-		for col2, data2 in col_data.items():
-			if col1 != col2 and abs(data1["mean"] - data2["mean"]) < MEAN_THRESHOLD and abs(data1["std"] - data2["std"]) < STD_THRESHOLD:
-				if not (col1, col2) in similar_features and not (col2, col1) in similar_features:
-					similar_features.append((col1, col2))
-					plot_features(df, col1, col2)
-	return similar_features
+    """Find similar features in a DataFrame based on mean and standard deviation."""
+    num_columns = [col for col in df.columns if df[col].dtype in [int, float]]
+    normalized = df[num_columns].apply(lambda col: (col - col.mean()) / col.std())
+
+    similar_features = []
+    for i in range(len(num_columns)):
+        for j in range(i + 1, len(num_columns)):
+            col1 = normalized[num_columns[i]]
+            col2 = normalized[num_columns[j]]
+            correlation = col1.corr(col2)
+            if abs(correlation) > CORRELATION_THRESHOLD:
+                similar_features.append((num_columns[i], num_columns[j], correlation))
+
+    print("Similar features based on correlation:")
+    for feature1, feature2, corr in similar_features:
+        print(f"{feature1} and {feature2} with correlation {corr:.2f}")
+        plot_features(df, feature1, feature2)
+    return similar_features
