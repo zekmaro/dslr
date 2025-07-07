@@ -11,9 +11,9 @@ def main():
 	# print(df.head())
 	# print(df.info())
 	# print(df.describe())
-	# describe(df)
+	describe(df)
 	# get_course_scores_per_house(df)
-	print(find_similar_features(df))
+	# print(find_similar_features(df))
 	# # plot_pairwise(df)
 
 

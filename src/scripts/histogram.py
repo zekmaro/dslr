@@ -24,6 +24,9 @@ def get_course_scores_per_house(df: pd.DataFrame) -> None:
     """Find which Hogwarts course has a homogeneous score distribution between all four houses"""
     courses = [col for col in df.columns if df[col].dtype in [int, float]]
 
+    for course in courses:
+        plot_feature_distribution(df, course)
+
     df = df.copy()
     for course in courses:
         mean = df[course].mean()
