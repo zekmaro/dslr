@@ -63,5 +63,4 @@ def get_best_features(df: pd.DataFrame, drop_columns: list[str]) -> list[tuple[p
 				feature2 = abs_corr.columns[j]
 				best_features_list.append((feature1, feature2, float(val)))
 
-	print(f"Best features: {best_features_list}")
 	return best_features_list
