@@ -1,5 +1,5 @@
 from src.utils.load_csv import load
-from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, TEST_DATASET_PATH
+from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, MODEL_DATA_PATH
 from src.models.train.features import get_best_features, rm_redundant_features
 from src.models.train.training import gradient_descent
 import numpy as np
@@ -50,12 +50,18 @@ def normalize_student_data(cleaned_df, training_features):
     mean = student_data.mean(axis=0)
     std = student_data.std(axis=0)
     normalized_data = (student_data - mean) / std
-    return normalized_data
+    return (mean, std, normalized_data)
 
 
-def load_weights(weights, filename='shared_data/weights.json'):
+def load_weights(weights, mean, std, filename=MODEL_DATA_PATH):
+    print(mean, std)
+    model_data = {
+        "mean": mean.tolist(),
+        "std": std.tolist(),
+        "weights": weights
+    }
     with open(filename, "w") as f:
-        json.dump(weights, f)
+        json.dump(model_data, f)
 
 
 def main():
@@ -64,7 +70,7 @@ def main():
     training_features = get_training_features(df)
     needed_columns = training_features + ['Hogwarts House']
     cleaned_df = df.dropna(subset=needed_columns)
-    normalized_data = normalize_student_data(cleaned_df, training_features)
+    (mean, std, normalized_data) = normalize_student_data(cleaned_df, training_features)
     houses_vector = cleaned_df['Hogwarts House'].map(HOUSE_MAP).to_numpy()
 
     target_gryffindor = (houses_vector == 0).astype(int)
@@ -93,7 +99,7 @@ def main():
         print(f"Weights for {house}: {weights}")
         print()
 
-    load_weights(output_weights)
+    load_weights(output_weights, mean, std)
 
 if __name__ == "__main__":
     main()
