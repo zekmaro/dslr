@@ -51,7 +51,6 @@ def get_best_features(df: pd.DataFrame, drop_columns: list[str]) -> list[tuple[p
 	df = df.drop(columns=drop_columns)
 	corr = df.corr()
 
-	print("Absolute correlation matrix:")
 	abs_corr = corr.abs()
 
 	best_features_list = []
