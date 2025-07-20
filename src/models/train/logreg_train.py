@@ -1,5 +1,5 @@
 from src.utils.load_csv import load
-from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, MODEL_DATA_PATH
+from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, MODEL_DATA_PATH, TRAINING_FEATURES
 from src.models.train.features import get_best_features, rm_redundant_features
 from src.models.train.training import gradient_descent
 import numpy as np
@@ -75,7 +75,9 @@ def main():
     x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy(), split=0.89)
 
     # 2. Get features to train on
-    training_features = get_training_features(x_train)
+    # training_features = get_training_features(x_train)
+    training_features = TRAINING_FEATURES
+    print(f"Training features: {training_features}")
 
     # 3. Drop NaNs in training data
     x_train_clean = x_train.dropna(subset=training_features)

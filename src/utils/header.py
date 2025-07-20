@@ -47,3 +47,20 @@ STD_THRESHOLD = 1
 MEAN_CV_THRESHOLD = 6
 STD_CV_THRESHOLD = 0.1
 CORRELATION_THRESHOLD = 0.9
+
+TRAINING_FEATURES =  [
+	# 'Herbology',
+	# 'Defense Against the Dark Arts',
+	'Divination',
+	# 'Muggle Studies',
+	'Ancient Runes',
+	# 'History of Magic',
+	# 'Transfiguration',
+	'Charms',
+	# 'Flying',
+
+	# 'Astronomy',
+	# 'Arithmancy',
+	# 'Care of Magical Creatures',
+	# 'Potions'
+]

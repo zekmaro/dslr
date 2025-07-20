@@ -56,7 +56,7 @@ def get_best_features(df: pd.DataFrame) -> list[tuple[pd.DataFrame, pd.DataFrame
 	for i in range(len(abs_corr.columns)):
 		for j in range(i + 1, len(abs_corr.columns)):
 			val = abs_corr.iloc[i, j]
-			if val < 0.8:
+			if val < 0.7:
 				feature1 = abs_corr.index[i]
 				feature2 = abs_corr.columns[j]
 				best_features_list.append((feature1, feature2, float(val)))

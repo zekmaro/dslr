@@ -2,7 +2,7 @@ import json
 import numpy as np
 import pandas as pd
 from src.utils.load_csv import load
-from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, MODEL_DATA_PATH, HOUSE_MAP
+from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, MODEL_DATA_PATH, HOUSE_MAP, TRAINING_FEATURES
 from src.utils.train_test_split import train_test_split
 
 
@@ -46,7 +46,8 @@ def main():
     std = np.array(model["std"])
     weights = model["weights"]
 
-    training_features = ['Herbology', 'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes', 'History of Magic', 'Transfiguration', 'Charms', 'Flying']
+    # training_features = ['Herbology', 'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes', 'History of Magic', 'Transfiguration', 'Charms', 'Flying']
+    training_features = TRAINING_FEATURES
     x_test_clean = x_test.dropna(subset=training_features)
 
     y_test_series = pd.Series(y_test, index=x_test.index)
