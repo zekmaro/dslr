@@ -4,6 +4,8 @@ from src.models.train.features import get_best_features, rm_redundant_features
 from src.models.train.training import gradient_descent
 import numpy as np
 import json
+from src.utils.train_test_split import train_test_split
+import pandas as pd
 
 
 def predict_house(student_data, weights):
@@ -36,7 +38,7 @@ def predict_test_data(test_df, training_features, output_weights):
 
 
 def get_training_features(df):
-    best_features = get_best_features(df, DROP_COLS)
+    best_features = get_best_features(df)
     print()
     features_to_remove = rm_redundant_features(df, best_features)
     training_features = [col for col in df.columns if df[col].dtype in ['int64', 'float64'] and col not in DROP_COLS and col not in features_to_remove]
@@ -67,39 +69,45 @@ def load_weights(weights, mean, std, filename=MODEL_DATA_PATH):
 def main():
     df = load(TRAIN_DATASET_PATH)
 
-    training_features = get_training_features(df)
-    needed_columns = training_features + ['Hogwarts House']
-    cleaned_df = df.dropna(subset=needed_columns)
-    (mean, std, normalized_data) = normalize_student_data(cleaned_df, training_features)
-    houses_vector = cleaned_df['Hogwarts House'].map(HOUSE_MAP).to_numpy()
+    # 1. Split into training and testing
+    x = df.drop(columns=DROP_COLS + ["Hogwarts House"])
+    y = df["Hogwarts House"]
+    x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy(), split=0.89)
 
-    target_gryffindor = (houses_vector == 0).astype(int)
-    target_slytherin = (houses_vector == 1).astype(int)
-    target_ravenclaw = (houses_vector == 2).astype(int)
-    target_hufflepuff = (houses_vector == 3).astype(int)
+    # 2. Get features to train on
+    training_features = get_training_features(x_train)
 
+    # 3. Drop NaNs in training data
+    x_train_clean = x_train.dropna(subset=training_features)
+    y_train_series = pd.Series(y_train, index=x_train.index)
+    y_train_clean = y_train_series.loc[x_train_clean.index]
+
+    # 4. Normalize training features
+    student_data = x_train_clean[training_features].to_numpy()
+    mean = student_data.mean(axis=0)
+    std = student_data.std(axis=0)
+    normalized_data = (student_data - mean) / std
+
+    # 5. One-vs-all target vectors
+    house_indices = pd.Series(y_train_clean).map(HOUSE_MAP).to_numpy()
     targets = {
-        "Gryffindor": target_gryffindor, 
-        "Slytherin": target_slytherin,
-        "Ravenclaw": target_ravenclaw,
-        "Hufflepuff": target_hufflepuff
+        "Gryffindor": (house_indices == 0).astype(int),
+        "Slytherin": (house_indices == 1).astype(int),
+        "Ravenclaw": (house_indices == 2).astype(int),
+        "Hufflepuff": (house_indices == 3).astype(int),
     }
 
-    output_weights = {
-        "Gryffindor": None,
-        "Slytherin": None,
-        "Ravenclaw": None,
-        "Hufflepuff": None
-    }
-
+    # 6. Train for each house
+    output_weights = {}
     for house, target in targets.items():
         print(f"Training for {house}...")
         weights = gradient_descent(normalized_data, target, alpha=0.1, epochs=1000)
         output_weights[house] = weights.tolist()
-        print(f"Weights for {house}: {weights}")
-        print()
+        print(f"Weights for {house}: {weights}\n")
 
+    # 7. Save the model
     load_weights(output_weights, mean, std)
+
 
 if __name__ == "__main__":
     main()

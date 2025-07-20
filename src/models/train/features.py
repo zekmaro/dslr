@@ -42,13 +42,12 @@ def rm_redundant_features(df, best_features: list[tuple[pd.DataFrame, pd.DataFra
 	return features_to_remove
 
 
-def get_best_features(df: pd.DataFrame, drop_columns: list[str]) -> list[tuple[pd.DataFrame, pd.DataFrame, float]]:
+def get_best_features(df: pd.DataFrame) -> list[tuple[pd.DataFrame, pd.DataFrame, float]]:
 	"""
 	Get the best features from the dataset.
 	:param df: DataFrame
 	:return: DataFrame with the best features
 	"""
-	df = df.drop(columns=drop_columns)
 	corr = df.corr()
 
 	abs_corr = corr.abs()
