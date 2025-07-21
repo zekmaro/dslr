@@ -1,6 +1,5 @@
 from src.utils.load_csv import load
 from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, MODEL_DATA_PATH, TRAINING_FEATURES, COURSES
-from src.models.train.features import get_best_features, rm_redundant_features, plot_feature_distribution
 from src.models.train.training import gradient_descent
 import numpy as np
 import json
@@ -37,16 +36,6 @@ def predict_test_data(test_df, training_features, output_weights):
     return predictions
 
 
-def get_training_features(df):
-    best_features = get_best_features(df)
-    print()
-    features_to_remove = rm_redundant_features(df, best_features)
-    training_features = [col for col in df.columns if df[col].dtype in ['int64', 'float64'] and col not in DROP_COLS and col not in features_to_remove]
-    print(f"Traning features: {training_features}")
-    print()
-    return training_features
-
-
 def normalize_student_data(cleaned_df, training_features):
     student_data = cleaned_df[training_features].to_numpy()
     mean = student_data.mean(axis=0)
@@ -74,18 +63,13 @@ def main():
     y = df["Hogwarts House"]
     x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy())
 
-    # 2. Get features to train on
-    # training_features = get_training_features(x_train)
-    training_features = TRAINING_FEATURES
-    print(f"Training features: {training_features}")
-
     # 3. Drop NaNs in training data
-    x_train_clean = x_train.dropna(subset=training_features)
+    x_train_clean = x_train.dropna(subset=TRAINING_FEATURES)
     y_train_series = pd.Series(y_train, index=x_train.index)
     y_train_clean = y_train_series.loc[x_train_clean.index]
 
     # 4. Normalize training features
-    student_data = x_train_clean[training_features].to_numpy()
+    student_data = x_train_clean[TRAINING_FEATURES].to_numpy()
     mean = student_data.mean(axis=0)
     std = student_data.std(axis=0)
     normalized_data = (student_data - mean) / std
