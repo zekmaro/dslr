@@ -6,6 +6,8 @@ import json
 from src.utils.train_test_split import train_test_split
 import pandas as pd
 import matplotlib.pyplot as plt
+from src.models.train.LogisticRegression import LogisticRegression
+from src.models.train.visual_tools import plot_cost_history
 
 def predict_house(student_data, weights):
     """
@@ -86,16 +88,14 @@ def main():
     # 6. Train for each house
     output_weights = {}
     for house, target in targets.items():
-        print(f"Training for {house}...")
-        weights, cost_history = gradient_descent(normalized_data, target, alpha=0.1, epochs=1000)
-        plt.plot(cost_history)
-        plt.xlabel("Epoch")
-        plt.ylabel("Cost")
-        plt.title(f"Training Cost Over Time for house {house}")
-        plt.grid(True)
-        plt.show()
+        # print(f"Training for {house}...")
+        model = LogisticRegression(learning_rate=0.1, iterations=1000, track_cost=True)
+        model.fit(normalized_data, target)
+        weights = model.weights
+        if model.track_cost:
+            plot_cost_history(model.cost_history, title=house)
         output_weights[house] = weights.tolist()
-        print(f"Weights for {house}: {weights}\n")
+        # print(f"Weights for {house}: {weights}\n")
 
     # 7. Save the model
     load_weights(output_weights, mean, std)

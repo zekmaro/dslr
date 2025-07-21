@@ -4,6 +4,15 @@ import pandas as pd
 import numpy as np
 
 
+def plot_cost_history(cost_history: list, title: str = "Cost History") -> None:
+    plt.plot(cost_history)
+    plt.xlabel("Epoch")
+    plt.ylabel("Cost")
+    plt.title(f"Training Cost Over Time for {title}")
+    plt.grid(True)
+    plt.show()
+
+
 def plot_heat_map(corr: np.ndarray, title: str = "Correlation Matrix") -> None:
 	"""
 	Plot a heatmap of the correlation matrix.

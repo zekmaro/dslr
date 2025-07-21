@@ -5,7 +5,8 @@ class LogisticRegression:
     def __init__(
         self,
         learning_rate: float = 0.01,
-        iterations: int = 1000
+        iterations: int = 1000,
+        track_cost: bool = False,
     ) -> None:
         """ Initializes the Logistic Regression model with a learning rate and number of iterations.
         Args:
@@ -15,6 +16,8 @@ class LogisticRegression:
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.weights: NDArray[np.float64] = None
+        self.track_cost = track_cost
+        self.cost_history = [] if track_cost else None
 
 
     def sigmoid(self, z: np.ndarray) -> np.ndarray:
@@ -33,10 +36,18 @@ class LogisticRegression:
         """Fits the logistic regression model to the training data using gradient descent."""
         m, n = X.shape
         self.weights = np.zeros(n)
+        if self.track_cost:
+            self.cost_history = []
 
         for _ in range(self.iterations):
             h = self.sigmoid(X @ self.weights)
             gradient = (1/m) * (X.T @ (h - y))
+            if self.track_cost:
+                cost = self.compute_cost(X, y)
+                self.cost_history.append(cost)
+                if self.track_cost:
+                    cost = self.compute_cost(X, y)
+                    self.cost_history.append(cost)
             self.weights -= self.learning_rate * gradient
 
 
