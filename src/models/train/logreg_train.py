@@ -1,6 +1,6 @@
 from src.utils.load_csv import load
-from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, MODEL_DATA_PATH, TRAINING_FEATURES
-from src.models.train.features import get_best_features, rm_redundant_features
+from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, MODEL_DATA_PATH, TRAINING_FEATURES, COURSES
+from src.models.train.features import get_best_features, rm_redundant_features, plot_feature_distribution
 from src.models.train.training import gradient_descent
 import numpy as np
 import json
@@ -72,7 +72,7 @@ def main():
     # 1. Split into training and testing
     x = df.drop(columns=DROP_COLS + ["Hogwarts House"])
     y = df["Hogwarts House"]
-    x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy(), split=0.89)
+    x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy())
 
     # 2. Get features to train on
     # training_features = get_training_features(x_train)

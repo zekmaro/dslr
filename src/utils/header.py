@@ -54,7 +54,7 @@ TRAINING_FEATURES =  [
 	'Divination',
 	# 'Muggle Studies',
 	'Ancient Runes',
-	# 'History of Magic',
+	'History of Magic',
 	# 'Transfiguration',
 	'Charms',
 	# 'Flying',

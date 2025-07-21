@@ -5,7 +5,7 @@ import numpy as np
 def train_test_split(
     x: pd.DataFrame,
     y: np.ndarray,
-    split: float = 0.89,
+    split: float = 0.7,
 ) -> tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]:
     assert 0 < split < 1 and len(x) == len(y)
 
@@ -20,4 +20,3 @@ def train_test_split(
     x_test, y_test = x.iloc[test_idx], y[test_idx]
 
     return x_train, y_train, x_test, y_test
-

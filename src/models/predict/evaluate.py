@@ -38,7 +38,7 @@ def main():
     :return: None
     """
     df = load(TRAIN_DATASET_PATH)
-    x_train, y_train, x_test, y_test = train_test_split(df.drop(columns=DROP_COLS), df["Hogwarts House"].to_numpy(), split=0.89)
+    x_train, y_train, x_test, y_test = train_test_split(df.drop(columns=DROP_COLS), df["Hogwarts House"].to_numpy())
     print(f"Training data shape: {x_train.shape}, Test data shape: {x_test.shape}, Training labels shape: {y_train.shape}, Test labels shape: {y_test.shape}")
 
     model = load_model_data()
