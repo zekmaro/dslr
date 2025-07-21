@@ -14,8 +14,11 @@ def compute_cost(X, y, theta):
 def gradient_descent(X, y, alpha=0.1, epochs=1000):
     m, n = X.shape
     theta = np.zeros(n)
+    cost_history = []
     for _ in range(epochs):
         h = sigmoid(X @ theta)
         gradient = (1/m) * (X.T @ (h - y))
         theta -= alpha * gradient
-    return theta
+        cost = compute_cost(X, y, theta)
+        cost_history.append(cost)
+    return theta, cost_history

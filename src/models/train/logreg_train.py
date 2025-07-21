@@ -5,7 +5,7 @@ import numpy as np
 import json
 from src.utils.train_test_split import train_test_split
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 def predict_house(student_data, weights):
     """
@@ -87,7 +87,13 @@ def main():
     output_weights = {}
     for house, target in targets.items():
         print(f"Training for {house}...")
-        weights = gradient_descent(normalized_data, target, alpha=0.1, epochs=1000)
+        weights, cost_history = gradient_descent(normalized_data, target, alpha=0.1, epochs=1000)
+        plt.plot(cost_history)
+        plt.xlabel("Epoch")
+        plt.ylabel("Cost")
+        plt.title(f"Training Cost Over Time for house {house}")
+        plt.grid(True)
+        plt.show()
         output_weights[house] = weights.tolist()
         print(f"Weights for {house}: {weights}\n")
 
