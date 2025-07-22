@@ -5,8 +5,8 @@ from src.utils.header import (
     MODEL_DATA_PATH,
     TRAINING_FEATURES
 )
-from src.models.train.LogisticRegression import LogisticRegression
-from src.models.train.visual_tools import plot_cost_history
+from src.models.LogisticRegression import LogisticRegression
+from src.train.visual_tools import plot_cost_history
 from src.utils.train_test_split import train_test_split
 from src.utils.load_csv import load
 from typing import Dict, List

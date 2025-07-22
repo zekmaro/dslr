@@ -1,9 +1,16 @@
-import json
-import numpy as np
-import pandas as pd
-from src.utils.load_csv import load
-from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, MODEL_DATA_PATH, HOUSE_MAP, TRAINING_FEATURES
+from src.utils.header import (
+    TRAIN_DATASET_PATH,
+    DROP_COLS,
+    MODEL_DATA_PATH,
+    HOUSE_MAP,
+    TRAINING_FEATURES
+)
+from src.models.LogisticRegression import LogisticRegression
 from src.utils.train_test_split import train_test_split
+from src.utils.load_csv import load
+import pandas as pd
+import numpy as np
+import json
 
 
 def sigmoid(z):
@@ -39,28 +46,18 @@ def main():
     """
     df = load(TRAIN_DATASET_PATH)
     x_train, y_train, x_test, y_test = train_test_split(df.drop(columns=DROP_COLS), df["Hogwarts House"].to_numpy())
-    print(f"Training data shape: {x_train.shape}, Test data shape: {x_test.shape}, Training labels shape: {y_train.shape}, Test labels shape: {y_test.shape}")
 
     model = load_model_data()
-    mean = np.array(model["mean"])
-    std = np.array(model["std"])
-    weights = model["weights"]
+    mean, std, weights = np.array(model["mean"]), np.array(model["std"]), model["weights"]
 
-    # training_features = ['Herbology', 'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes', 'History of Magic', 'Transfiguration', 'Charms', 'Flying']
-    training_features = TRAINING_FEATURES
-    x_test_clean = x_test.dropna(subset=training_features)
-
+    x_test_clean = x_test.dropna(subset=TRAINING_FEATURES)
     y_test_series = pd.Series(y_test, index=x_test.index)
     y_test_clean = y_test_series.loc[x_test_clean.index]
 
-    print(y_test_clean.value_counts())
-
-
-    student_data = x_test_clean[training_features].to_numpy()
+    student_data = x_test_clean[TRAINING_FEATURES].to_numpy()
     normalized_data = (student_data - mean) / std
 
     predicted_houses = predict(normalized_data, weights)
-    print(pd.Series(predicted_houses).value_counts())
     prediction_vector = np.array([HOUSE_MAP[house] for house in predicted_houses])
 
     true_vector = y_test_clean.map(HOUSE_MAP).to_numpy()

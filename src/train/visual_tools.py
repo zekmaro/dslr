@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from typing import List
-import pandas as pd
 import numpy as np
 
 
