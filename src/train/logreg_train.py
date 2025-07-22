@@ -33,6 +33,13 @@ def normalize_student_data(x_train_clean: pd.DataFrame) -> np.ndarray:
     return (mean, std, normalized_data)
 
 
+def clean_data(x, y, features):
+    x_clean = x.dropna(subset=features)
+    y_series = pd.Series(y, index=x.index)
+    y_clean = y_series.loc[x_clean.index]
+    return x_clean, y_clean
+
+
 def main():
     """Main function to train the logistic regression model for each house."""
     df = load(TRAIN_DATASET_PATH)
@@ -41,15 +48,12 @@ def main():
     y = df["Hogwarts House"]
 
     x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy())
+    x_clean, y_clean = clean_data(x_train, y_train, TRAINING_FEATURES)
 
-    x_train_clean = x_train.dropna(subset=TRAINING_FEATURES)
-    y_train_series = pd.Series(y_train, index=x_train.index)
-    y_train_clean = y_train_series.loc[x_train_clean.index]
-
-    mean, std, normalized_data = normalize_student_data(x_train_clean)
+    mean, std, normalized_data = normalize_student_data(x_clean)
 
     ovr = OneVsRestClassifier(LogisticRegression)
-    ovr.fit(normalized_data, y_train_clean.to_numpy())
+    ovr.fit(normalized_data, y_clean.to_numpy())
     ovr.safe_model_to_file(mean, std)
 
 
