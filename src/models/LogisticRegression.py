@@ -1,7 +1,9 @@
 import numpy as np
 from numpy.typing import NDArray
+from typing import List
 
 class LogisticRegression:
+    """Logistic Regression model for binary classification."""
     def __init__(
         self,
         learning_rate: float = 0.01,
@@ -48,6 +50,11 @@ class LogisticRegression:
                     cost = self.compute_cost(X, y)
                     self.cost_history.append(cost)
             self.weights -= self.learning_rate * gradient
+    
+
+    def load_weights(self, weights: List[float]) -> None:
+        """Loads the weights into the model."""
+        self.weights = np.array(weights)
 
 
     def predict_proba(self, X):

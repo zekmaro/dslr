@@ -6,8 +6,9 @@ from src.utils.header import (
     TRAINING_FEATURES
 )
 from src.models.LogisticRegression import LogisticRegression
-from src.train.visual_tools import plot_cost_history
+from src.models.OneVsRestClassifier import OneVsRestClassifier
 from src.utils.train_test_split import train_test_split
+from src.train.visual_tools import plot_cost_history
 from src.utils.load_csv import load
 from typing import Dict, List
 import pandas as pd
@@ -32,34 +33,6 @@ def normalize_student_data(x_train_clean: pd.DataFrame) -> np.ndarray:
     return (mean, std, normalized_data)
 
 
-def load_weights(
-    weights: Dict[str, List[float]],
-    mean: np.ndarray,
-    std: np.ndarray,
-    filename: str = MODEL_DATA_PATH
-) -> None:
-    """
-    Load the weights into a JSON file.
-
-    Args:
-        weights (Dict[str, List[float]]): The list of weights for each house.
-        mean (np.ndarray): Array of means for each feature of the training data.
-        std (np.ndarray): Array of standard deviations for each feature of the training data.
-        filename (str): The path to the JSON file where the weights will be saved.
-    
-    Returns:
-        None
-    """
-    print(mean, std)
-    model_data = {
-        "mean": mean.tolist(),
-        "std": std.tolist(),
-        "weights": weights
-    }
-    with open(filename, "w") as f:
-        json.dump(model_data, f)
-
-
 def main():
     """Main function to train the logistic regression model for each house."""
     df = load(TRAIN_DATASET_PATH)
@@ -75,23 +48,9 @@ def main():
 
     mean, std, normalized_data = normalize_student_data(x_train_clean)
 
-    house_indices = pd.Series(y_train_clean).map(HOUSE_MAP).to_numpy()
-    targets = {
-        "Gryffindor": (house_indices == 0).astype(int),
-        "Slytherin": (house_indices == 1).astype(int),
-        "Ravenclaw": (house_indices == 2).astype(int),
-        "Hufflepuff": (house_indices == 3).astype(int),
-    }
-
-    output_weights = {}
-    for house, target in targets.items():
-        model = LogisticRegression(learning_rate=0.1, iterations=1000, track_cost=False)
-        model.fit(normalized_data, target)
-        if model.track_cost:
-            plot_cost_history(model.cost_history, title=f"Training Cost Over Time for {house}")
-        output_weights[house] = model.weights.tolist()
-
-    load_weights(output_weights, mean, std)
+    ovr = OneVsRestClassifier(LogisticRegression)
+    ovr.fit(normalized_data, y_train_clean.to_numpy())
+    ovr.load_model_data_to_file(mean, std)
 
 
 if __name__ == "__main__":
