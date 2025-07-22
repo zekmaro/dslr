@@ -8,10 +8,9 @@ class LogisticRegression:
         iterations: int = 1000,
         track_cost: bool = False,
     ) -> None:
-        """ Initializes the Logistic Regression model with a learning rate and number of iterations.
-        Args:
-            learning_rate (float): The step size for each iteration of gradient descent.
-            iterations (int): The number of iterations for training the model.
+        """
+        Initializes the Logistic Regression model
+        with a learning rate and number of iterations.
         """
         self.learning_rate = learning_rate
         self.iterations = iterations

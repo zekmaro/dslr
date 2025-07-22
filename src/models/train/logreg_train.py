@@ -1,52 +1,55 @@
-from src.utils.load_csv import load
-from src.utils.header import TRAIN_DATASET_PATH, DROP_COLS, HOUSE_MAP, MODEL_DATA_PATH, TRAINING_FEATURES, COURSES
-from src.models.train.training import gradient_descent
-import numpy as np
-import json
-from src.utils.train_test_split import train_test_split
-import pandas as pd
-import matplotlib.pyplot as plt
+from src.utils.header import (
+	TRAIN_DATASET_PATH,
+    DROP_COLS,
+    HOUSE_MAP,
+    MODEL_DATA_PATH,
+    TRAINING_FEATURES
+)
 from src.models.train.LogisticRegression import LogisticRegression
 from src.models.train.visual_tools import plot_cost_history
+from src.utils.train_test_split import train_test_split
+from src.utils.load_csv import load
+from typing import Dict, List
+import pandas as pd
+import numpy as np
+import json
 
-def predict_house(student_data, weights):
+
+def normalize_student_data(x_train_clean: pd.DataFrame) -> np.ndarray:
     """
-    Predict the house of a student based on their data and the weights.
-    :param student_data: The student's data
-    :param weights: The weights for the model
-    :return: The predicted house
+    Normalize the student data by calculating the mean and standard deviation.
+
+    Args:
+        x_train_clean (pd.DataFrame): The cleaned training data.
+    
+    Returns:
+        np.ndarray: The normalized student data.
     """
-    probabilities = {}
-    for house, weight in weights.items():
-        probabilities[house] = 1 / (1 + np.exp(-np.dot(student_data, weight)))
-    return max(probabilities, key=probabilities.get)
-
-
-def predict_test_data(test_df, training_features, output_weights):
-    """
-    Predict the house for the test data.
-    :param test_df: The test DataFrame
-    :param training_features: The features used for training
-    :param output_weights: The weights for the model
-    :return: The predicted houses for the test data
-    """
-    test_data = test_df[training_features].dropna().to_numpy()
-    predictions = []
-    for student in test_data:
-        predicted_house = predict_house(student, output_weights)
-        predictions.append(predicted_house)
-    return predictions
-
-
-def normalize_student_data(cleaned_df, training_features):
-    student_data = cleaned_df[training_features].to_numpy()
+    student_data = x_train_clean[TRAINING_FEATURES].to_numpy()
     mean = student_data.mean(axis=0)
     std = student_data.std(axis=0)
     normalized_data = (student_data - mean) / std
     return (mean, std, normalized_data)
 
 
-def load_weights(weights, mean, std, filename=MODEL_DATA_PATH):
+def load_weights(
+    weights: Dict[str, List[float]],
+    mean: np.ndarray,
+    std: np.ndarray,
+    filename: str = MODEL_DATA_PATH
+) -> None:
+    """
+    Load the weights into a JSON file.
+
+    Args:
+        weights (Dict[str, List[float]]): The list of weights for each house.
+        mean (np.ndarray): Array of means for each feature of the training data.
+        std (np.ndarray): Array of standard deviations for each feature of the training data.
+        filename (str): The path to the JSON file where the weights will be saved.
+    
+    Returns:
+        None
+    """
     print(mean, std)
     model_data = {
         "mean": mean.tolist(),
@@ -58,25 +61,20 @@ def load_weights(weights, mean, std, filename=MODEL_DATA_PATH):
 
 
 def main():
+    """Main function to train the logistic regression model for each house."""
     df = load(TRAIN_DATASET_PATH)
 
-    # 1. Split into training and testing
     x = df.drop(columns=DROP_COLS + ["Hogwarts House"])
     y = df["Hogwarts House"]
+
     x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy())
 
-    # 3. Drop NaNs in training data
     x_train_clean = x_train.dropna(subset=TRAINING_FEATURES)
     y_train_series = pd.Series(y_train, index=x_train.index)
     y_train_clean = y_train_series.loc[x_train_clean.index]
 
-    # 4. Normalize training features
-    student_data = x_train_clean[TRAINING_FEATURES].to_numpy()
-    mean = student_data.mean(axis=0)
-    std = student_data.std(axis=0)
-    normalized_data = (student_data - mean) / std
+    mean, std, normalized_data = normalize_student_data(x_train_clean)
 
-    # 5. One-vs-all target vectors
     house_indices = pd.Series(y_train_clean).map(HOUSE_MAP).to_numpy()
     targets = {
         "Gryffindor": (house_indices == 0).astype(int),
@@ -85,19 +83,14 @@ def main():
         "Hufflepuff": (house_indices == 3).astype(int),
     }
 
-    # 6. Train for each house
     output_weights = {}
     for house, target in targets.items():
-        # print(f"Training for {house}...")
-        model = LogisticRegression(learning_rate=0.1, iterations=1000, track_cost=True)
+        model = LogisticRegression(learning_rate=0.1, iterations=1000, track_cost=False)
         model.fit(normalized_data, target)
-        weights = model.weights
         if model.track_cost:
-            plot_cost_history(model.cost_history, title=house)
-        output_weights[house] = weights.tolist()
-        # print(f"Weights for {house}: {weights}\n")
+            plot_cost_history(model.cost_history, title=f"Training Cost Over Time for {house}")
+        output_weights[house] = model.weights.tolist()
 
-    # 7. Save the model
     load_weights(output_weights, mean, std)
 
 
