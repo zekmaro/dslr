@@ -21,7 +21,12 @@ class OneVsRestClassifier:
 		self.feature_names = None
 	
 
-	def fit(self, X: np.ndarray, y: np.ndarray, feature_names: List[str]) -> None:
+	def fit(
+		self,
+		X: np.ndarray,
+		y: np.ndarray,
+		feature_names: List[str]
+	) -> None:
 		"""
 		Fits the OneVsRestClassifier to the training data.
 		
@@ -44,7 +49,10 @@ class OneVsRestClassifier:
 			self.classifiers[cls].fit(normalized_X, binary_y)
 
 	
-	def load_from_weights(self, weights: Dict[str, List[float]]) -> None:
+	def load_from_weights(
+		self,
+		weights: Dict[str, List[float]]
+	) -> None:
 		"""
 		Loads the weights for each class classifier.
 		
@@ -105,5 +113,50 @@ class OneVsRestClassifier:
 		"""
 		if self.feature_means is None or self.feature_stds is None:
 			raise ValueError("Feature means and standard deviations must be set before normalization.")
-		student_data = x_clean[feature_names].to_numpy()
-		return (student_data - self.feature_means) / self.feature_stds
+		features_data = x_clean[feature_names].to_numpy()
+		return (features_data - self.feature_means) / self.feature_stds
+	
+
+	def load_model_from_file(
+		self,
+		filename: str = MODEL_DATA_PATH
+	) -> None:
+		"""
+		Load the model weights from a JSON file.
+		
+		Args:
+			filename (str): The path to the JSON file containing the model weights.
+		
+		Returns:
+			None
+		"""
+		with open(filename, "r") as f:
+			model_data = json.load(f)
+		self.feature_means = np.array(model_data["mean"])
+		self.feature_stds = np.array(model_data["std"])
+		self.load_from_weights(model_data["weights"])
+
+
+	def predict(
+		self,
+		normalized_data: np.ndarray
+	) -> List[str]:
+		"""
+		Predict the class label for each row in the normalized dataset.
+
+		Args:
+			normalized_data (np.ndarray): The normalized feature data.
+
+		Returns:
+			List[str]: The predicted class labels for each sample.
+		"""
+		predicted_labels = []
+
+		for row in normalized_data:
+			probabilities = {}
+			for label, classifier in self.classifiers.items():
+				probabilities[label] = classifier.predict_proba(row)
+			best_label = max(probabilities, key=probabilities.get)  # type: ignore
+			predicted_labels.append(best_label)
+
+		return predicted_labels

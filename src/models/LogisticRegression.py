@@ -57,9 +57,6 @@ class LogisticRegression:
         self.weights = np.array(weights)
 
 
-    def predict_proba(self, X):
+    def predict_proba(self, X: np.ndarray) -> np.ndarray:
+        """Predicts the probabilities of the class."""
         return self.sigmoid(X @ self.weights)
-
-
-    def predict(self, X, threshold=0.5):
-        return (self.predict_proba(X) >= threshold).astype(int)
