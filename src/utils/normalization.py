@@ -1,28 +1,6 @@
-from src.utils.header import TRAINING_FEATURES
 from typing import List
 import pandas as pd
 import numpy as np
-
-
-def normalize_data(
-    x_clean: pd.DataFrame,
-    feature_names: List[str],
-) -> np.ndarray:
-    """
-    Normalize the student data by calculating the mean and standard deviation.
-
-    Args:
-        x_clean (pd.DataFrame): The cleaned training data.
-        feature_means (np.ndarray): The means of the features.
-        feature_stds (np.ndarray): The standard deviations of the features.
-    
-    Returns:
-        np.ndarray: The normalized student data.
-    """
-    feature_means = x_clean.mean(axis=0)
-    feature_stds = x_clean.std(axis=0)
-    student_data = x_clean[feature_names].to_numpy()
-    normalized_data = (student_data - feature_means) / feature_stds
 
 
 def clean_data(
