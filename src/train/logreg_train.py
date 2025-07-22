@@ -50,7 +50,7 @@ def main():
 
     ovr = OneVsRestClassifier(LogisticRegression)
     ovr.fit(normalized_data, y_train_clean.to_numpy())
-    ovr.load_model_data_to_file(mean, std)
+    ovr.safe_model_to_file(mean, std)
 
 
 if __name__ == "__main__":

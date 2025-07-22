@@ -51,7 +51,7 @@ class OneVsRestClassifier:
 			self.classifiers[label] = model
 
 
-	def load_model_data_to_file(
+	def safe_model_to_file(
 		self,
 		mean: np.ndarray,
 		std: np.ndarray,
