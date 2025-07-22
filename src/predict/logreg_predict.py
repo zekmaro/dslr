@@ -6,7 +6,9 @@ from src.utils.header import (
     TRAINING_FEATURES
 )
 from src.models.LogisticRegression import LogisticRegression
+from src.models.OneVsRestClassifier import OneVsRestClassifier
 from src.utils.train_test_split import train_test_split
+from src.utils.normalization import normalize_student_data, clean_data
 from src.utils.load_csv import load
 import pandas as pd
 import numpy as np
@@ -39,28 +41,21 @@ def predict(normalized_data, house_weights):
     return predicted_houses
 
 
-def main():
-    """
-    Main function to load the weights and print them.
-    :return: None
-    """
+def main() -> None:
+    """Main function to load the weights and print them."""
     df = load(TRAIN_DATASET_PATH)
     x_train, y_train, x_test, y_test = train_test_split(df.drop(columns=DROP_COLS), df["Hogwarts House"].to_numpy())
 
     model = load_model_data()
-    mean, std, weights = np.array(model["mean"]), np.array(model["std"]), model["weights"]
+    feature_means, feature_std, weights = np.array(model["mean"]), np.array(model["std"]), model["weights"]
 
-    x_test_clean = x_test.dropna(subset=TRAINING_FEATURES)
-    y_test_series = pd.Series(y_test, index=x_test.index)
-    y_test_clean = y_test_series.loc[x_test_clean.index]
-
-    student_data = x_test_clean[TRAINING_FEATURES].to_numpy()
-    normalized_data = (student_data - mean) / std
+    x_clean, y_clean = clean_data(x_train, y_train, TRAINING_FEATURES)
+    normalized_data = normalize_student_data(x_clean, feature_means, feature_std)
 
     predicted_houses = predict(normalized_data, weights)
     prediction_vector = np.array([HOUSE_MAP[house] for house in predicted_houses])
 
-    true_vector = y_test_clean.map(HOUSE_MAP).to_numpy()
+    true_vector = y_clean.map(HOUSE_MAP).to_numpy()
     accuracy = np.mean(prediction_vector == true_vector)
     print(f"Accuracy: {accuracy * 100:.2f}%")
 
