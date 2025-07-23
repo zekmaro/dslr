@@ -1,14 +1,13 @@
-from src.utils.header import (
-    TRAIN_DATASET_PATH,
-    DROP_COLS,
-    HOUSE_MAP,
-    TRAINING_FEATURES
-)
-from src.models.LogisticRegression import LogisticRegression
 from src.models.OneVsRestClassifier import OneVsRestClassifier
+from src.models.LogisticRegression import LogisticRegression
 from src.utils.train_test_split import train_test_split
 from src.utils.normalization import clean_data
 from src.utils.load_csv import load
+from src.utils.header import (
+    TRAIN_DATASET_PATH,
+    DROP_COLS,
+    TRAINING_FEATURES
+)
 
 
 def main() -> None:

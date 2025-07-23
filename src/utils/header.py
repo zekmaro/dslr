@@ -4,14 +4,14 @@ MODEL_DATA_PATH = "shared_data/model.json"
 IMAGE_DEST_PATH = "images/pair_plot.png"
 MODEL_DATA_PATH = "shared_data/model.json"
 
-HOUSE_COLORS = {
+LABEL_COLORS = {
 	"Gryffindor": "red",
 	"Slytherin": "green",
 	"Ravenclaw": "blue",
 	"Hufflepuff": "orange"
 }
 
-HOUSE_MAP = {
+LABEL_MAP = {
 	"Gryffindor": 0,
 	"Slytherin": 1,
 	"Ravenclaw": 2,

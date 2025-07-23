@@ -1,4 +1,4 @@
-from src.utils.header import MODEL_DATA_PATH, HOUSE_MAP
+from src.utils.header import MODEL_DATA_PATH, LABEL_MAP
 from typing import Dict, List
 import pandas as pd
 import numpy as np
@@ -181,6 +181,6 @@ class OneVsRestClassifier:
 		"""
 		X_normalized = self.normalize_data(X, feature_names)
 		predictions = self.predict(X_normalized)
-		predicted_labels = np.array([HOUSE_MAP[p] for p in predictions])
-		true_labels = y.map(HOUSE_MAP).to_numpy()
+		predicted_labels = np.array([LABEL_MAP[p] for p in predictions])
+		true_labels = y.map(LABEL_MAP).to_numpy()
 		return np.mean(predicted_labels == true_labels)
