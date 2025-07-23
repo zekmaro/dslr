@@ -17,11 +17,13 @@ def main() -> None:
     x = df.drop(columns=DROP_COLS + ["Hogwarts House"])
     y = df["Hogwarts House"]
 
-    x_train, y_train, _, _ = train_test_split(x, y.to_numpy())
+    x_train, y_train, _, _ = train_test_split(x, y.to_numpy()) # test set not used during training.
+
     x_clean, y_clean = clean_data(x_train, y_train, TRAINING_FEATURES)
 
     ovr = OneVsRestClassifier(LogisticRegression)
     ovr.fit(x_clean, y_clean.to_numpy(), TRAINING_FEATURES)
+
     ovr.save_model_to_file()
 
 

@@ -1,4 +1,4 @@
-from src.utils.header import MODEL_DATA_PATH
+from src.utils.header import MODEL_DATA_PATH, HOUSE_MAP
 from typing import Dict, List
 import pandas as pd
 import numpy as np
@@ -160,3 +160,27 @@ class OneVsRestClassifier:
 			predicted_labels.append(best_label)
 
 		return predicted_labels
+
+
+	def evaluate(
+		self,
+		X: pd.DataFrame,
+		y: pd.Series,
+		feature_names: List[str]
+	) -> float:
+		"""
+		Calculate the accuracy of the model on the given dataset.
+		
+		Args:
+			X (pd.DataFrame): Feature matrix of shape (n_samples, n_features).
+			y (pd.Series): Target vector of shape (n_samples,).
+			feature_names (List[str]): List of feature names to use for prediction.
+		
+		Returns:
+			float: The accuracy of the model on the dataset.
+		"""
+		X_normalized = self.normalize_data(X, feature_names)
+		predictions = self.predict(X_normalized)
+		predicted_labels = np.array([HOUSE_MAP[p] for p in predictions])
+		true_labels = y.map(HOUSE_MAP).to_numpy()
+		return np.mean(predicted_labels == true_labels)
