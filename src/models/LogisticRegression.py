@@ -13,6 +13,15 @@ class LogisticRegression:
         """
         Initializes the Logistic Regression model
         with a learning rate and number of iterations.
+
+        Args:
+            learning_rate (float): The step size for gradient descent.
+            iterations (int): The number of iterations for training.
+            track_cost (bool): Whether to track the cost during training.
+        
+        Attributes:
+            weights (NDArray[np.float64]): The weights of the model.
+            cost_history (List[float]): The history of the cost function if tracking is enabled.
         """
         self.learning_rate = learning_rate
         self.iterations = iterations

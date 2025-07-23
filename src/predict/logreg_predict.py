@@ -15,19 +15,22 @@ import numpy as np
 def main() -> None:
     """Main function to load the weights and print them."""
     df = load(TRAIN_DATASET_PATH)
-    x_train, y_train, x_test, y_test = train_test_split(df.drop(columns=DROP_COLS), df["Hogwarts House"].to_numpy())
+    _, _, x_test, y_test = train_test_split(
+        df.drop(columns=DROP_COLS),
+        df["Hogwarts House"].to_numpy()
+    )
+    x_clean, y_clean = clean_data(x_test, y_test, TRAINING_FEATURES)
 
     ovr = OneVsRestClassifier(LogisticRegression)
     ovr.load_model_from_file()
 
-    x_clean, y_clean = clean_data(x_train, y_train, TRAINING_FEATURES)
-    normalized_data = ovr.normalize_data(x_clean, TRAINING_FEATURES)
+    normalized_x = ovr.normalize_data(x_clean, TRAINING_FEATURES)
+    predictions = ovr.predict(normalized_x)
 
-    predicted_houses = ovr.predict(normalized_data)
-    prediction_vector = np.array([HOUSE_MAP[house] for house in predicted_houses])
+    predicted_labels = np.array([HOUSE_MAP[label] for label in predictions])
+    true_labels = y_clean.map(HOUSE_MAP).to_numpy()
 
-    true_vector = y_clean.map(HOUSE_MAP).to_numpy()
-    accuracy = np.mean(prediction_vector == true_vector)
+    accuracy = np.mean(predicted_labels == true_labels)
     print(f"Accuracy: {accuracy * 100:.2f}%")
 
 

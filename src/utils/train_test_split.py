@@ -10,7 +10,7 @@ def train_test_split(
     assert 0 < split < 1 and len(x) == len(y)
 
     indices = np.arange(len(x))
-    np.random.seed(42)
+    # np.random.seed(42)
     np.random.shuffle(indices)
 
     split_idx = int(len(x) * split)

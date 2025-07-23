@@ -17,7 +17,7 @@ def main() -> None:
     x = df.drop(columns=DROP_COLS + ["Hogwarts House"])
     y = df["Hogwarts House"]
 
-    x_train, y_train, x_test, y_test = train_test_split(x, y.to_numpy())
+    x_train, y_train, _, _ = train_test_split(x, y.to_numpy())
     x_clean, y_clean = clean_data(x_train, y_train, TRAINING_FEATURES)
 
     ovr = OneVsRestClassifier(LogisticRegression)
