@@ -1,10 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils.header import CORRELATION_THRESHOLD, HOUSE_COLORS
+from utils.header import CORRELATION_THRESHOLD, LABEL_COLORS
 
 
 def plot_features(data: pd.DataFrame, feature_1: pd.DataFrame, feature_2: pd.DataFrame):
-	for house, color in HOUSE_COLORS.items():
+	for house, color in LABEL_COLORS.items():
 		subset = data[data["Hogwarts House"] == house]
 		plt.scatter(subset[feature_1], subset[feature_2], label=house, color=color, alpha=0.6, s=15)
 	plt.xlabel(feature_1)

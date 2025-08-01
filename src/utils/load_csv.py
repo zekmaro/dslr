@@ -15,5 +15,5 @@ def load(path: str) -> pd.DataFrame:
 	except pd.errors.ParserError:
 		raise ValueError(f"File {path} is not a valid CSV file")
 	
-	print(f"Loading dataset of dimensions {df.shape}")
+	# print(f"Loading dataset of dimensions {df.shape}")
 	return df
