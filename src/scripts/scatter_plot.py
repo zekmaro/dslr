@@ -26,8 +26,8 @@ def find_similar_features(df: pd.DataFrame):
             col1 = normalized[num_columns[i]]
             col2 = normalized[num_columns[j]]
             correlation = col1.corr(col2)
-            if abs(correlation) > CORRELATION_THRESHOLD:
-                similar_features.append((num_columns[i], num_columns[j], correlation))
+            # if abs(correlation) > CORRELATION_THRESHOLD:
+            similar_features.append((num_columns[i], num_columns[j], correlation))
 
     print("Similar features based on correlation:")
     for feature1, feature2, corr in similar_features:

@@ -8,9 +8,9 @@ from scripts.pair_plot import plot_pairwise
 
 def main():
 	df = load(TRAIN_DATASET_PATH)
-	# print(df.head())
-	# print(df.info())
-	# print(df.describe())
+	print(df.head())
+	print(df.info())
+	print(df.describe())
 	describe(df)
 	# get_course_scores_per_house(df)
 	# print(find_similar_features(df))
