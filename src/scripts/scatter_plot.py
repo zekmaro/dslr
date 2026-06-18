@@ -1,6 +1,8 @@
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from utils.header import CORRELATION_THRESHOLD, LABEL_COLORS
+from utils.load_csv import load
 
 
 def plot_features(data: pd.DataFrame, feature_1: pd.DataFrame, feature_2: pd.DataFrame):
@@ -34,3 +36,16 @@ def find_similar_features(df: pd.DataFrame):
         print(f"{feature1} and {feature2} with correlation {corr:.2f}")
         plot_features(df, feature1, feature2)
     return similar_features
+
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        print("Usage: scatter_plot <path_to_csv>")
+        sys.exit(1)
+
+    df = load(sys.argv[1])
+    find_similar_features(df)
+
+
+if __name__ == "__main__":
+    main()

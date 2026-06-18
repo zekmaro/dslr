@@ -27,19 +27,17 @@ This project serves as an introduction to core machine learning concepts such as
 
 ## 🧰 Requirements
 
-* Python 3.x
-* Libraries:
+* [`uv`](https://docs.astral.sh/uv/) for dependency & environment management
 
   * `numpy`
   * `pandas`
   * `matplotlib`
   * `seaborn`
-  * (optional) `scikit-learn` for metrics comparison
 
-Install dependencies:
+Create the virtual environment and install the locked dependencies:
 
 ```sh
-pip install -r requirements.txt
+uv sync
 ```
 
 ## 🛠️ Usage
@@ -47,7 +45,7 @@ pip install -r requirements.txt
 ### 1. Data Description
 
 ```sh
-python describe.py dataset.csv
+uv run describe datasets/dataset_train.csv
 ```
 
 * Outputs statistical description: mean, std, min, max, percentiles
@@ -55,9 +53,9 @@ python describe.py dataset.csv
 ### 2. Data Visualization
 
 ```sh
-python histogram.py dataset.csv
-python scatter_plot.py dataset.csv
-python pair_plot.py dataset.csv
+uv run histogram datasets/dataset_train.csv
+uv run scatter_plot datasets/dataset_train.csv
+uv run pair_plot datasets/dataset_train.csv
 ```
 
 * Histograms by house
@@ -67,16 +65,16 @@ python pair_plot.py dataset.csv
 ### 3. Training the Model
 
 ```sh
-python logreg_train.py dataset_train.csv
+uv run logreg_train
 ```
 
 * Trains logistic regression model for multi-class classification
-* Stores trained weights to a file (e.g., `weights.npy`)
+* Stores the trained model to `shared_data/model.json`
 
 ### 4. Predicting Houses
 
 ```sh
-python logreg_predict.py dataset_test.csv
+uv run logreg_predict
 ```
 
 * Predicts Hogwarts house for each student in test data

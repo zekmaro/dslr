@@ -1,8 +1,10 @@
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from utils.statistical_methods import calculate_mean, calculate_median, calculate_quartile, calculate_variance, calculate_stddev
 from utils.header import MEAN_CV_THRESHOLD, STD_CV_THRESHOLD
+from utils.load_csv import load
 
 
 def plot_feature_distribution(df: pd.DataFrame, feature: str) -> None:
@@ -69,3 +71,16 @@ def get_course_scores_per_house(df: pd.DataFrame) -> None:
     print(homo_courses)
     for course in homo_courses:
         plot_feature_distribution(df, course)
+
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        print("Usage: histogram <path_to_csv>")
+        sys.exit(1)
+
+    df = load(sys.argv[1])
+    get_course_scores_per_house(df)
+
+
+if __name__ == "__main__":
+    main()
