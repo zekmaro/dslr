@@ -1,9 +1,9 @@
-from src.models.OneVsRestClassifier import OneVsRestClassifier
-from src.models.LogisticRegression import LogisticRegression
-from src.utils.train_test_split import train_test_split
-from src.utils.normalization import clean_data
-from src.utils.load_csv import load
-from src.utils.header import (
+from models.OneVsRestClassifier import OneVsRestClassifier
+from models.LogisticRegression import LogisticRegression
+from utils.train_test_split import train_test_split
+from utils.normalization import clean_data
+from utils.load_csv import load
+from utils.header import (
     TRAIN_DATASET_PATH,
     DROP_COLS,
     TRAINING_FEATURES

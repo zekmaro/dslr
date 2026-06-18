@@ -1,4 +1,4 @@
-from src.utils.header import MODEL_DATA_PATH, LABEL_MAP
+from utils.header import MODEL_DATA_PATH, LABEL_MAP
 from typing import Dict, List
 import pandas as pd
 import numpy as np
