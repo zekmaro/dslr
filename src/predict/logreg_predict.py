@@ -17,7 +17,7 @@ def main() -> None:
     _, _, x_test, y_test = train_test_split(
         df.drop(columns=DROP_COLS),
         df["Hogwarts House"].to_numpy()
-    ) # train set not used during training.
+    )  # train set not used during training.
 
     x_clean, y_clean = clean_data(x_test, y_test, TRAINING_FEATURES)
 

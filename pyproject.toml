@@ -12,6 +12,22 @@ dependencies = [
     "scikit-learn>=1.7"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "flake8>=4.0.0",
+    "pre-commit>=2.20.0",
+]
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203", "E501", "W503"]
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+]
+
 [project.scripts]
 describe = "scripts.describe:main"
 histogram = "scripts.histogram:main"

@@ -17,7 +17,7 @@ def plot_cost_history(
         title (str): Title of the plot.
         xlabel (str): Label for the x-axis.
         ylable (str): Label for the y-axis.
-    
+
     Returns:
         None
     """
@@ -30,18 +30,18 @@ def plot_cost_history(
 
 
 def plot_heat_map(corr: np.ndarray, title: str = "Correlation Matrix") -> None:
-	"""
-	Plot a heatmap of the correlation matrix.
-    
+    """
+    Plot a heatmap of the correlation matrix.
+
     Args:
         corr (np.ndarray): The correlation matrix to plot.
         title (str): Title of the heatmap.
-    
+
     Returns:
         None
-	"""
-	plt.figure(figsize=(10, 8))
-	plt.imshow(corr, cmap='coolwarm', interpolation='nearest')
-	plt.colorbar()
-	plt.title(title)
-	plt.show()
+    """
+    plt.figure(figsize=(10, 8))
+    plt.imshow(corr, cmap='coolwarm', interpolation='nearest')
+    plt.colorbar()
+    plt.title(title)
+    plt.show()

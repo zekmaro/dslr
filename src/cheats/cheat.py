@@ -89,6 +89,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from sklearn.datasets import make_classification
 from sklearn.datasets import load_iris
 
+
 def main() -> None:
     """Load the trained model and evaluate its accuracy on the test set."""
     df = prepare_dataset(DATA_PATH)

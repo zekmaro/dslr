@@ -10,14 +10,14 @@ def clean_data(
 ) -> tuple[pd.DataFrame, pd.Series]:
     """
     Clean the data by dropping rows with NaN values in specified features.
-    
+
     Args:
-		x (pd.DataFrame): The feature DataFrame.
-		y (np.ndarray): The target vector.
-		features (List[str]): The list of features to check for NaN values.
+    x (pd.DataFrame): The feature DataFrame.
+    y (np.ndarray): The target vector.
+    features (List[str]): The list of features to check for NaN values.
 
     Returns:
-		tuple[pd.DataFrame, pd.Series]: Cleaned feature DataFrame and target Series.
+    tuple[pd.DataFrame, pd.Series]: Cleaned feature DataFrame and target Series.
     """
     x_clean = x.dropna(subset=features)
     y_series = pd.Series(y, index=x.index)

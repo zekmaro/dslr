@@ -4,7 +4,7 @@ from utils.train_test_split import train_test_split
 from utils.normalization import clean_data
 from utils.load_csv import load
 from utils.header import (
-	TRAIN_DATASET_PATH,
+    TRAIN_DATASET_PATH,
     DROP_COLS,
     TRAINING_FEATURES
 )
@@ -17,7 +17,7 @@ def main() -> None:
     x = df.drop(columns=DROP_COLS + ["Hogwarts House"])
     y = df["Hogwarts House"]
 
-    x_train, y_train, _, _ = train_test_split(x, y.to_numpy()) # test set not used during training.
+    x_train, y_train, _, _ = train_test_split(x, y.to_numpy())  # test set not used during training.
 
     x_clean, y_clean = clean_data(x_train, y_train, TRAINING_FEATURES)
 
