@@ -6,6 +6,14 @@ whole thing implemented with scikit
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, accuracy_score
+# from sklearn.datasets import make_classification
+# from sklearn.datasets import load_iris
 
 
 DATA_PATH = "./datasets/dataset_train.csv"
@@ -68,83 +76,72 @@ def add_bd_cols(df: pd.DataFrame):
 
 
 def prepare_dataset(path):
-    train_data = pd.read_csv(path)
+    df = pd.read_csv(path)
 
     # Best hand to numerical feat
-    hand_mapping = {k: v for v, k in enumerate(train_data['Best Hand'].unique())}
-    train_data['Best Hand'] = train_data['Best Hand'].map(hand_mapping)
+    hand_mapping = {k: v for v, k in enumerate(df['Best Hand'].unique())}
+    df['Best Hand'] = df['Best Hand'].map(hand_mapping)
 
     # get_name_distribution(train_data)
-    add_bd_cols(train_data)
-    get_correlations(train_data)
+    add_bd_cols(df)
+    # get_correlations(train_data)
+    df = df.dropna()
 
     # train_data = train_data.drop("Defense Against the Dark Arts")  # is correlated with Astronomy
 
-    return train_data
-
-
-# from sklearn.model_selection import train_test_split
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.pipeline import Pipeline
-# from sklearn.multiclass import OneVsRestClassifier
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.metrics import classification_report, accuracy_score
-# from sklearn.datasets import make_classification
-# from sklearn.datasets import load_iris
+    return df
 
 
 def main() -> None:
     """Load the trained model and evaluate its accuracy on the test set."""
     df = prepare_dataset(DATA_PATH)
 
-    df.describe()
-    # y = df['Hogwarts House']
-    # X = df[['Best Hand', '']]
+    PREDICT_FEAT = 'Hogwarts House'
+    ALL_FEATS = [
+        "Best Hand",
+        "Arithmancy",
+        "Astronomy",
+        "Herbology",
+        "Defense Against the Dark Arts",
+        "Divination",
+        "Muggle Studies",
+        "Ancient Runes",
+        "History of Magic",
+        "Transfiguration",
+        "Potions",
+        "Care of Magical Creatures",
+        "Charms",
+        "Flying",
+        'BD day',
+        'BD month',
+        'BD year',
+        'BD doy',
+        'BD weekday'
+    ]
+    y = df[PREDICT_FEAT]
+    X = df[ALL_FEATS]
+    RANDOM_STATE = 42
+    TEST_SIZE = 0.2
 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y)
 
-# ---------------------------------------------------
-# Train / Test Split
-# ---------------------------------------------------
-# X_train, X_test, y_train, y_test = train_test_split(
-#     X,
-#     y,
-#     test_size=0.2,
-#     random_state=42,
-#     stratify=y
-# )
-
-# # ---------------------------------------------------
-# # Pipeline
-# # ---------------------------------------------------
-# pipeline = Pipeline([
-#     ("scaler", StandardScaler()),
-#     (
-#         "classifier",
-#         OneVsRestClassifier(
-#             LogisticRegression(
-#                 max_iter=5000,
-#                 solver="lbfgs"
-#             )
-#         )
-#     )
-# ])
-
-# # ---------------------------------------------------
-# # Train
-# # ---------------------------------------------------
-# pipeline.fit(X_train, y_train)
-
-# # ---------------------------------------------------
-# # Predict
-# # ---------------------------------------------------
-# y_pred = pipeline.predict(X_test)
-
-# # ---------------------------------------------------
-# # Evaluation
-# # ---------------------------------------------------
-# print("Accuracy:", accuracy_score(y_test, y_pred))
-# print("\nClassification Report:\n")
-# print(classification_report(y_test, y_pred))
+    pipeline = Pipeline([
+        ("scaler", StandardScaler()),
+        (
+            "classifier",
+            OneVsRestClassifier(
+                LogisticRegression(
+                    max_iter=5000,
+                    solver='liblinear'
+                )
+            )
+        )
+    ])
+    pipeline.fit(X_train, y_train)
+    y_pred = pipeline.predict(X_test)
+    print("Accuracy:", accuracy_score(y_test, y_pred))
+    print("\nClassification Report:\n")
+    print(classification_report(y_test, y_pred))
 
 
 if __name__ == "__main__":

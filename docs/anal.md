@@ -2,12 +2,17 @@
 
 ## String columns:
 
-large variaty of names/surnames
-name and surname to house shows no correlation, safe to drop
+### Name/Surname
 
-## Enum
+Build name vs house histogram
+
+### Best hand
 
 Best hand should be converted Left/Right to 0/1
+
+### BD
+
+transfor to year - month - dom - doy - dow
 
 ## Correlations
 
@@ -18,6 +23,17 @@ Building correlation matrix for all the features: results
 
 Suggestions:
  - get rid of Flying and DADA
+
+## Impact
+
+### Name/Surname
+
+ - large variaty of names/surnames
+ - name and surname to house shows no correlation, safe to drop
+
+### Best hand and Birthday
+
+ - low impact exists
 
 ## N/A Options:
 
