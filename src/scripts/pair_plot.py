@@ -26,6 +26,14 @@ def main() -> None:
         sys.exit(1)
 
     df = load(sys.argv[1])
+    bd_col = pd.to_datetime(df['Birthday'])
+    df['BD day'] = bd_col.dt.day
+    df['BD month'] = bd_col.dt.month
+    df['BD year'] = bd_col.dt.year
+    df['BD doy'] = bd_col.dt.dayofyear
+    df['BD weekday'] = bd_col.dt.weekday
+    hand_mapping = {k: v for v, k in enumerate(df['Best Hand'].unique())}
+    df['Best Hand'] = df['Best Hand'].map(hand_mapping)
     plot_pairwise(df)
 
 
