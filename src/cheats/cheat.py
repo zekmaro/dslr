@@ -57,6 +57,7 @@ def get_name_distribution(df: pd.DataFrame):
     plt.savefig(SURNAME_DIST_PATH, dpi=150, bbox_inches='tight')
     plt.close()
 
+
 def add_bd_cols(df: pd.DataFrame):
     bd_col = pd.to_datetime(df['Birthday'])
     df['BD day'] = bd_col.dt.day
@@ -64,6 +65,7 @@ def add_bd_cols(df: pd.DataFrame):
     df['BD year'] = bd_col.dt.year
     df['BD doy'] = bd_col.dt.dayofyear
     df['BD weekday'] = bd_col.dt.weekday
+
 
 def prepare_dataset(path):
     train_data = pd.read_csv(path)
@@ -80,21 +82,23 @@ def prepare_dataset(path):
 
     return train_data
 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, accuracy_score
-from sklearn.datasets import make_classification
-from sklearn.datasets import load_iris
+
+# from sklearn.model_selection import train_test_split
+# from sklearn.preprocessing import StandardScaler
+# from sklearn.pipeline import Pipeline
+# from sklearn.multiclass import OneVsRestClassifier
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.metrics import classification_report, accuracy_score
+# from sklearn.datasets import make_classification
+# from sklearn.datasets import load_iris
 
 
 def main() -> None:
     """Load the trained model and evaluate its accuracy on the test set."""
     df = prepare_dataset(DATA_PATH)
 
-    y = df['Hogwarts House']
+    df.describe()
+    # y = df['Hogwarts House']
     # X = df[['Best Hand', '']]
 
 
