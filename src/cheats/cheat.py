@@ -6,20 +6,23 @@ whole thing implemented with scikit
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
+import json
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
-# from sklearn.datasets import make_classification
-# from sklearn.datasets import load_iris
+from sklearn.inspection import permutation_importance
 
 
 DATA_PATH = "./datasets/dataset_train.csv"
 CORR_MATRIX_PATH = "./images/correlation_matrix.png"
 NAME_DIST_PATH = "./images/name_distribution.png"
 SURNAME_DIST_PATH = "./images/surname_distribution.png"
+FEATURE_IMPORTANCE_PATH = "./images/feature_importance.png"
+FEATURE_IMPACT_CONFIG_PATH = "./configs/df_config.json"
 
 
 def get_correlations(df: pd.DataFrame):
@@ -75,6 +78,83 @@ def add_bd_cols(df: pd.DataFrame):
     df['BD weekday'] = bd_col.dt.weekday
 
 
+def analyze_feature_impact(pipeline, X_test, y_test, feature_names):
+    """Analyze and visualize feature impact on model predictions."""
+    import os
+    os.makedirs("./configs", exist_ok=True)
+    os.makedirs("./images", exist_ok=True)
+
+    classifier = pipeline.named_steps['classifier']
+
+    # Stack coefficients from all per-class estimators, shape (n_classes, n_features)
+    all_coefficients = np.vstack([est.coef_[0] for est in classifier.estimators_])
+    coef_importance = np.abs(all_coefficients).mean(axis=0)
+
+    # Create dataframe for coefficient importance
+    coef_df = pd.DataFrame({
+        'Feature': feature_names,
+        'Importance': coef_importance
+    }).sort_values('Importance', ascending=False)
+
+    # Compute permutation importance
+    perm_importance = permutation_importance(
+        pipeline, X_test, y_test,
+        n_repeats=10,
+        random_state=42,
+        n_jobs=-1
+    )
+
+    perm_df = pd.DataFrame({
+        'Feature': feature_names,
+        'Importance': perm_importance.importances_mean,
+        'Std': perm_importance.importances_std
+    }).sort_values('Importance', ascending=False)
+
+    # Visualize both importance metrics
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+
+    # Coefficient importance
+    top_n = 15
+    coef_top = coef_df.head(top_n)
+    axes[0].barh(coef_top['Feature'], coef_top['Importance'], color='steelblue')
+    axes[0].set_xlabel('Mean Absolute Coefficient')
+    axes[0].set_title('Feature Importance (Model Coefficients)', fontsize=14)
+    axes[0].invert_yaxis()
+
+    # Permutation importance
+    perm_top = perm_df.head(top_n)
+    axes[1].barh(perm_top['Feature'], perm_top['Importance'],
+                 xerr=perm_top['Std'], color='coral', capsize=3)
+    axes[1].set_xlabel('Permutation Importance')
+    axes[1].set_title('Feature Impact (Permutation Importance)', fontsize=14)
+    axes[1].invert_yaxis()
+
+    plt.tight_layout()
+    plt.savefig(FEATURE_IMPORTANCE_PATH, dpi=150, bbox_inches='tight')
+    plt.close()
+
+    # Save impact analysis to config
+    impact_config = {
+        'coefficient_importance': coef_df.to_dict('records'),
+        'permutation_importance': perm_df.to_dict('records'),
+        'top_5_features': coef_df.head(5)['Feature'].tolist()
+    }
+
+    with open(FEATURE_IMPACT_CONFIG_PATH, 'w') as f:
+        json.dump(impact_config, f, indent=2)
+
+    print("\n" + "="*60)
+    print("FEATURE IMPACT ANALYSIS")
+    print("="*60)
+    print("\nTop 10 Features by Model Coefficients:")
+    print(coef_df.head(10).to_string(index=False))
+    print("\nTop 10 Features by Permutation Importance:")
+    print(perm_df.head(10).to_string(index=False))
+    print(f"\nVisualization saved to: {FEATURE_IMPORTANCE_PATH}")
+    print(f"Config saved to: {FEATURE_IMPACT_CONFIG_PATH}")
+    print("="*60 + "\n")
+
+
 def prepare_dataset(path):
     df = pd.read_csv(path)
 
@@ -98,25 +178,25 @@ def main() -> None:
 
     PREDICT_FEAT = 'Hogwarts House'
     ALL_FEATS = [
-        "Best Hand",
-        "Arithmancy",
+        # "Best Hand",
+        # "Arithmancy",
         "Astronomy",
         "Herbology",
-        "Defense Against the Dark Arts",
-        "Divination",
-        "Muggle Studies",
+        # "Defense Against the Dark Arts",
+        # "Divination",
+        # "Muggle Studies",
         "Ancient Runes",
-        "History of Magic",
-        "Transfiguration",
-        "Potions",
-        "Care of Magical Creatures",
-        "Charms",
-        "Flying",
-        'BD day',
-        'BD month',
-        'BD year',
-        'BD doy',
-        'BD weekday'
+        # "History of Magic",
+        # "Transfiguration",
+        # "Potions",
+        # "Care of Magical Creatures",
+        # "Charms",
+        # "Flying",
+        # 'BD day',
+        # 'BD month',
+        # 'BD year',
+        # 'BD doy',
+        # 'BD weekday'
     ]
     y = df[PREDICT_FEAT]
     X = df[ALL_FEATS]
@@ -142,6 +222,9 @@ def main() -> None:
     print("Accuracy:", accuracy_score(y_test, y_pred))
     print("\nClassification Report:\n")
     print(classification_report(y_test, y_pred))
+
+    # Analyze feature impact
+    analyze_feature_impact(pipeline, X_test, y_test, ALL_FEATS)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 # Data analysis
 
+
 ## String columns:
 
 ### Name/Surname
@@ -14,6 +15,7 @@ Best hand should be converted Left/Right to 0/1
 
 transfor to year - month - dom - doy - dow
 
+
 ## Correlations
 
 Building correlation matrix for all the features: results
@@ -23,6 +25,7 @@ Building correlation matrix for all the features: results
 
 Suggestions:
  - get rid of Flying and DADA
+
 
 ## Impact
 
@@ -35,6 +38,7 @@ Suggestions:
 
  - low impact exists
 
+
 ## N/A Options:
 
 1) dropna: best if data is missing and not too much info is lost
@@ -44,3 +48,17 @@ Suggestions:
  - add 1 bool feature per original feature
 4) add out of distribution value (e.g if val is distributed 0..1 replace with -1)
 5) ...
+
+#### for now using drop na
+
+
+## Feature importance:
+
+- Coefficients measure how much weight the linear decision boundary assigns to each feature, on the standardized scale. Since StandardScaler runs before the classifier, coefficients are comparable across features.
+- Permutation importance measures how much actual prediction accuracy drops when you destroy a feature's signal by shuffling it.
+
+drop features one by one with this metrics, untill score doesn't change.
+3 features left with 99.6%:
+ - Astronomy
+ - Herbology
+ - Ancient Runes
