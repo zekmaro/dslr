@@ -6,7 +6,7 @@ from utils.statistical_methods import (
     calculate_mean,
     calculate_median,
     calculate_quartile,
-    calculate_variance,
+    # calculate_variance,
     calculate_stddev
 )
 
@@ -47,7 +47,7 @@ def main():
     if len(sys.argv) != 2:
         print("Usage: python describe.py <path_to_csv>")
         sys.exit(1)
-        
+
     path = sys.argv[1]
 
     if not os.path.isfile(path):
@@ -57,6 +57,7 @@ def main():
     df = pd.read_csv(path)
     described_df = describe(df)
     print(described_df)
+
 
 if __name__ == "__main__":
     main()
