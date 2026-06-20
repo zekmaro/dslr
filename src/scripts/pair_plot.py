@@ -7,27 +7,27 @@ from utils.load_csv import load
 
 
 def plot_pairwise(df: pd.DataFrame) -> None:
-	"""Plot pairwise scatter plots for specified columns in a DataFrame.
+    """Plot pairwise scatter plots for specified columns in a DataFrame.
 
-	Args:
-		df (pd.DataFrame): The DataFrame containing the data.
-	"""
-	sns.pairplot(
-		df,
-		hue='Hogwarts House',
-		palette=LABEL_COLORS
-	)
-	plt.savefig(IMAGE_DEST_PATH)
+    Args:
+        df (pd.DataFrame): The DataFrame containing the data.
+    """
+    sns.pairplot(
+        df,
+        hue='Hogwarts House',
+        palette=LABEL_COLORS
+    )
+    plt.savefig(IMAGE_DEST_PATH)
 
 
 def main() -> None:
-	if len(sys.argv) != 2:
-		print("Usage: pair_plot <path_to_csv>")
-		sys.exit(1)
+    if len(sys.argv) != 2:
+        print("Usage: pair_plot <path_to_csv>")
+        sys.exit(1)
 
-	df = load(sys.argv[1])
-	plot_pairwise(df)
+    df = load(sys.argv[1])
+    plot_pairwise(df)
 
 
 if __name__ == "__main__":
-	main()
+    main()

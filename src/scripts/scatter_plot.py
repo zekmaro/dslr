@@ -1,20 +1,20 @@
 import sys
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils.header import CORRELATION_THRESHOLD, LABEL_COLORS
+from utils.header import LABEL_COLORS  # CORRELATION_THRESHOLD
 from utils.load_csv import load
 
 
 def plot_features(data: pd.DataFrame, feature_1: pd.DataFrame, feature_2: pd.DataFrame):
-	for house, color in LABEL_COLORS.items():
-		subset = data[data["Hogwarts House"] == house]
-		plt.scatter(subset[feature_1], subset[feature_2], label=house, color=color, alpha=0.6, s=15)
-	plt.xlabel(feature_1)
-	plt.ylabel(feature_2)
-	plt.title(f"{feature_1} vs {feature_2}")
-	plt.legend()
-	plt.grid(True)
-	plt.show()
+    for house, color in LABEL_COLORS.items():
+        subset = data[data["Hogwarts House"] == house]
+        plt.scatter(subset[feature_1], subset[feature_2], label=house, color=color, alpha=0.6, s=15)
+    plt.xlabel(feature_1)
+    plt.ylabel(feature_2)
+    plt.title(f"{feature_1} vs {feature_2}")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 
 def find_similar_features(df: pd.DataFrame):

@@ -2,7 +2,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils.statistical_methods import calculate_mean, calculate_median, calculate_quartile, calculate_variance, calculate_stddev
+from utils.statistical_methods import calculate_mean, calculate_stddev  # calculate_median, calculate_quartile, calculate_variance
 from utils.header import MEAN_CV_THRESHOLD, STD_CV_THRESHOLD
 from utils.load_csv import load
 
@@ -56,7 +56,7 @@ def get_course_scores_per_house(df: pd.DataFrame) -> None:
     for course, houses_data in courses_score_per_house.items():
         means = [calculate_mean(*houses_data[house]) for house in houses_data]
         stddevs = [calculate_stddev(*houses_data[house]) for house in houses_data]
-        
+
         print(f"Course's means: {means}")
         print(f"Course's stds: {stddevs}")
 
@@ -65,7 +65,7 @@ def get_course_scores_per_house(df: pd.DataFrame) -> None:
         print(f"Course: {course}. means_cv: {means_cv}, stds_cv: {stds_cv}")
         if means_cv < MEAN_CV_THRESHOLD and stds_cv < STD_CV_THRESHOLD:
             homo_courses.append(course)
-        
+
         print()
 
     print(homo_courses)
