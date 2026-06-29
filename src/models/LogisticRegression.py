@@ -53,9 +53,6 @@ class LogisticRegression:
             if self.track_cost:
                 cost = self.compute_cost(X, y)
                 self.cost_history.append(cost)
-                if self.track_cost:
-                    cost = self.compute_cost(X, y)
-                    self.cost_history.append(cost)
             self.weights -= self.learning_rate * gradient
 
     def load_weights(self, weights: List[float]) -> None:
