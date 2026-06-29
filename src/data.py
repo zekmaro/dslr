@@ -25,13 +25,14 @@ class Preprocessor:
     feature_columns: list[str]
     impute_strategy: str = "median"  # "median" or "mean"
 
-    # frozen statistics, needed for n\a predict later
+    # frozen statistics, needed for n/a predict later
     impute_values: dict[str, float] = field(default_factory=dict)
     means: dict[str, float] = field(default_factory=dict)
     stds: dict[str, float] = field(default_factory=dict)
 
     # calc statistics + None strategy
     def fit(self, df: pd.DataFrame) -> "Preprocessor":
+        df = df[self.feature_columns]
         means = df.mean()
         stds = df.std()
 
@@ -40,9 +41,7 @@ class Preprocessor:
         elif self.impute_strategy == "mean":
             fills = means
         else:
-            raise ValueError(f"unknown impute_strategy {self.impute_values}")
-
-        df.fillna(fills)
+            raise ValueError(f"unknown impute_strategy {self.impute_strategy}")
 
         self.stds = stds.to_dict()
         self.means = means.to_dict()
@@ -57,6 +56,9 @@ class Preprocessor:
         for col in self.feature_columns:
             x[col] = (x[col] - self.means[col]) / self.stds[col]
         return x.to_numpy(dtype=float)
+
+    def fit_transform(self, df: pd.DataFrame) -> np.ndarray:
+        return self.fit(df).transform(df)
 
     def to_dict(self) -> dict:
         return {

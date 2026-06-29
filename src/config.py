@@ -1,20 +1,15 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .data import Preprocessor
+from .model import LearningParams, OneVsRestClassifier
+
 
 DEFAULT_CONFIG_PATH = "configs/train_config.json"
 DEFAULT_ARTIFACT_PATH = "shared_data/model.json"
-
-
-@dataclass
-class LearningParams:
-    learning_rate: float
-    epochs: int
-    seed: int
 
 
 @dataclass
@@ -48,14 +43,12 @@ class TrainConfig:
 @dataclass
 class ModelArtifact:
     preprocessor: Preprocessor
-    classes: list[str]
-    weights: dict[str, list[float]] = field(default_factory=dict)
+    classifier: OneVsRestClassifier
 
     def save(self, path: str = DEFAULT_ARTIFACT_PATH) -> None:
         payload = {
-            "classes": self.classes,
             "preprocessor": self.preprocessor.to_dict(),
-            "weights": self.weights,
+            "classifier": self.classifier.to_dict(),
         }
         Path(path).write_text(json.dumps(payload, indent=2))
 
@@ -64,6 +57,5 @@ class ModelArtifact:
         payload = json.loads(Path(path).read_text())
         return cls(
             preprocessor=Preprocessor.from_dict(payload["preprocessor"]),
-            classes=list(payload["classes"]),
-            weights=dict(payload["weights"]),
+            classifier=OneVsRestClassifier.from_dict(payload["classifier"]),
         )

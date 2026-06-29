@@ -3,10 +3,9 @@ from __future__ import annotations
 import argparse
 
 import numpy as np
-from pathlib import Path
 
 from .config import (DEFAULT_ARTIFACT_PATH, DEFAULT_CONFIG_PATH, ModelArtifact,
-                     TrainConfig)  # , LearningParams
+                     TrainConfig)
 from .data import Preprocessor, default_feature_columns, load_dataset
 from .model import OneVsRestClassifier
 
@@ -28,7 +27,6 @@ def main() -> None:
     parser.add_argument("--artifact", default=DEFAULT_ARTIFACT_PATH)
     args = parser.parse_args()
 
-    args.config_exists = Path(args.config).exists()
     cfg = TrainConfig.load(args.config)
 
     df = load_dataset(cfg.dataset)
@@ -49,9 +47,6 @@ def main() -> None:
     x_train = pre.fit_transform(df_train)  # saves statistics in preprocessor
     y_train = df_train[cfg.target_column].to_numpy()
 
-    x_val = pre.transform(df_val)
-    y_val = df_val[cfg.target_column].to_numpy()
-
     clf = OneVsRestClassifier(cfg.learning_params()).fit(x_train, y_train)
 
     train_acc = accuracy(y_train, clf.predict(x_train))
@@ -64,11 +59,9 @@ def main() -> None:
         print(f"val accuracy   : {accuracy(y_val, clf.predict(x_val)):.4f}"
               f"  ({len(df_val)} rows held out)")
 
-    cfg.save(args.config)
     ModelArtifact(
         preprocessor=pre,
-        classes=clf.classes,
-        weights=clf.weights_dict(),
+        classifier=clf,
     ).save(args.artifact)
     print(f"\nsaved recipe   -> {args.config}")
     print(f"saved artifact -> {args.artifact}")
