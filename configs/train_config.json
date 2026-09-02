@@ -1,0 +1,25 @@
+{
+  "dataset": "datasets/dataset_train.csv",
+  "target_column": "Hogwarts House",
+  "feature_columns": [
+    "Arithmancy",
+    "Astronomy",
+    "Herbology",
+    "Defense Against the Dark Arts",
+    "Divination",
+    "Muggle Studies",
+    "Ancient Runes",
+    "History of Magic",
+    "Transfiguration",
+    "Potions",
+    "Care of Magical Creatures",
+    "Charms",
+    "Flying"
+  ],
+  "impute_strategy": "median",
+  "learning_rate": 0.5,
+  "epochs": 1000,
+  "batch_size": null,
+  "seed": 42,
+  "validation_split": 0.2
+}

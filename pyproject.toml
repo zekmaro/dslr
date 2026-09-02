@@ -29,17 +29,17 @@ exclude = [
 ]
 
 [project.scripts]
-describe = "scripts.describe:main"
-histogram = "scripts.histogram:main"
-scatter_plot = "scripts.scatter_plot:main"
-pair_plot = "scripts.pair_plot:main"
-logreg_train = "train.logreg_train:main"
-logreg_predict = "predict.logreg_predict:main"
-cheat = "cheats.cheat:main"
+# describe = "scripts.describe:main"
+# histogram = "scripts.histogram:main"
+# scatter_plot = "scripts.scatter_plot:main"
+# pair_plot = "scripts.pair_plot:main"
+train = "src.train_model:main"
+predict = "src.predict:main"
+# cheat = "cheats.cheat:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/models", "src/predict", "src/scripts", "src/train", "src/utils"]
+packages = ["src"]
