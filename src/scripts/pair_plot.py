@@ -2,8 +2,8 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils.header import LABEL_COLORS, IMAGE_DEST_PATH
-from utils.load_csv import load
+from ..utils.header import LABEL_COLORS, IMAGE_DEST_PATH
+from ..utils.load_csv import load
 
 
 def plot_pairwise(df: pd.DataFrame) -> None:

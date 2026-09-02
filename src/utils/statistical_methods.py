@@ -13,6 +13,28 @@ def calculate_mean(*args: Any) -> float:
     return sum(args) / len(args)
 
 
+def calculate_min(*args: Any) -> float:
+    """Return the smallest of the given values."""
+    if len(args) == 0:
+        return 0
+    smallest = args[0]
+    for value in args[1:]:
+        if value < smallest:
+            smallest = value
+    return smallest
+
+
+def calculate_max(*args: Any) -> float:
+    """Return the largest of the given values."""
+    if len(args) == 0:
+        return 0
+    largest = args[0]
+    for value in args[1:]:
+        if value > largest:
+            largest = value
+    return largest
+
+
 def calculate_median(*args: Any) -> float:
     """Calculate the median of a list of numbers."""
     sorted_args = sorted(args)

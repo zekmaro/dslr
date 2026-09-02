@@ -1,12 +1,13 @@
 import sys
 import os
 import pandas as pd
-from utils.statistical_methods import (
+from ..utils.statistical_methods import (
     count,
     calculate_mean,
     calculate_median,
     calculate_quartile,
-    # calculate_variance,
+    calculate_min,
+    calculate_max,
     calculate_stddev
 )
 
@@ -23,29 +24,26 @@ def describe(df: pd.DataFrame) -> pd.DataFrame:
         columns=num_columns
     )
 
-    for col in df.columns:
-        dtype = df[col].dtype
+    for col in num_columns:
+        clean_col = df[col].dropna()
+        quart_tuple = calculate_quartile(*clean_col)
+        described_df[col] = [
+            count(*clean_col),
+            calculate_mean(*clean_col),
+            calculate_stddev(*clean_col),
+            calculate_min(*clean_col),
+            quart_tuple[0],
+            calculate_median(*clean_col),
+            quart_tuple[1],
+            calculate_max(*clean_col),
+        ]
 
-        if dtype == int or dtype == float:
-            clean_col = df[col].dropna()
-            quart_tuple = calculate_quartile(*clean_col)
-            described_df[col] = [
-                count(*clean_col),
-                calculate_mean(*clean_col),
-                calculate_stddev(*clean_col),
-                clean_col.min(),
-                quart_tuple[0],
-                calculate_median(*clean_col),
-                quart_tuple[1],
-                clean_col.max(),
-            ]
-
-    print(described_df)
+    return described_df
 
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python describe.py <path_to_csv>")
+        print("Usage: describe <path_to_csv>")
         sys.exit(1)
 
     path = sys.argv[1]
@@ -55,8 +53,7 @@ def main():
         sys.exit(1)
 
     df = pd.read_csv(path)
-    described_df = describe(df)
-    print(described_df)
+    print(describe(df))
 
 
 if __name__ == "__main__":

@@ -19,7 +19,6 @@
   "impute_strategy": "median",
   "learning_rate": 0.5,
   "epochs": 1000,
-  "batch_size": null,
   "seed": 42,
   "validation_split": 0.2
 }

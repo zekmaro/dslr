@@ -2,9 +2,9 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils.statistical_methods import calculate_mean, calculate_stddev  # calculate_median, calculate_quartile, calculate_variance
-from utils.header import MEAN_CV_THRESHOLD, STD_CV_THRESHOLD
-from utils.load_csv import load
+from ..utils.statistical_methods import calculate_mean, calculate_stddev  # calculate_median, calculate_quartile, calculate_variance
+from ..utils.header import MEAN_CV_THRESHOLD, STD_CV_THRESHOLD
+from ..utils.load_csv import load
 
 
 def plot_feature_distribution(df: pd.DataFrame, feature: str) -> None:
