@@ -13,7 +13,7 @@ This project serves as an introduction to core machine learning concepts such as
 * **Feature Normalization** - Scaling features for optimal gradient descent performance
 * **Logistic Regression Classifier** - One-vs-All strategy for multi-class classification
 * **Training & Prediction** - Train a model and use it to predict classes on unseen data
-* **Evaluation Metrics** - Accuracy, precision, recall, F1-score, confusion matrix
+* **Evaluation Metrics** - Held-out validation accuracy reported during training
 * **Data Visualization** - Detailed plots using `matplotlib` and `seaborn`
 
 ## 🧠 Concepts Covered
@@ -65,56 +65,54 @@ uv run pair_plot datasets/dataset_train.csv
 ### 3. Training the Model
 
 ```sh
-uv run logreg_train
+uv run logreg_train datasets/dataset_train.csv
 ```
 
-* Trains logistic regression model for multi-class classification
-* Stores the trained model to `shared_data/model.json`
+* Trains a one-vs-all logistic regression classifier with batch gradient descent
+* Holds out a validation split and reports train/validation accuracy
+* Writes the weights and the normalization statistics to `shared_data/model.json`
+* Hyperparameters are read from `configs/train_config.json`
 
 ### 4. Predicting Houses
 
 ```sh
-uv run logreg_predict
+uv run logreg_predict datasets/dataset_test.csv shared_data/model.json
 ```
 
-* Predicts Hogwarts house for each student in test data
-* Outputs `houses.csv`
-
-### 5. Evaluating Model
-
-```sh
-python evaluate.py dataset_test.csv houses.csv
-```
-
-* Displays accuracy, precision, recall, F1-score, and confusion matrix
+* Predicts the Hogwarts house for every student in the test set
+* Writes `houses.csv` with the `Index,Hogwarts House` schema
 
 ## 📁 Project Structure
 
 ```
 📂 dslr/
-├── describe.py          # Statistical summary of dataset
-├── histogram.py         # Data visualization by class
-├── scatter_plot.py      # Feature scatter plots
-├── pair_plot.py         # Seaborn pair plots
-├── logreg_train.py      # Model training logic
-├── logreg_predict.py    # Model inference/prediction
-├── evaluate.py          # Metrics and model evaluation
-├── requirements.txt     # Dependencies
-├── weights.npy          # Saved model weights
+├── configs/train_config.json     # Training hyperparameters
+├── datasets/                     # dataset_train.csv, dataset_test.csv
+├── shared_data/model.json        # Trained weights + normalization stats (generated)
+├── src/
+│   ├── config.py                 # Train config & model artifact (de)serialization
+│   ├── data.py                   # CSV loading, imputation, standardization
+│   ├── model.py                  # LogisticRegressionGD + OneVsRestClassifier
+│   ├── logreg_train.py           # Training program
+│   ├── logreg_predict.py         # Prediction program
+│   ├── scripts/                  # describe, histogram, scatter_plot, pair_plot
+│   └── utils/                    # Hand-rolled statistics, CSV loader, constants
+└── pyproject.toml                # Dependencies & console entry points
 ```
 
 ## 📊 Example Output
 
 ```
-Training accuracy: 91.2%
-Precision per class: [0.89, 0.93, 0.92, 0.90]
-F1 Score: 0.91
+classes        : ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
+features used  : 13
+train accuracy : 0.9805  (1280 rows)
+val accuracy   : 0.9875  (320 rows held out)
 ```
 
 ## 🏗️ Future Improvements
 
 * Cross-validation
-* Support for different optimization algorithms (e.g., SGD, Adam)
+* Support for different optimization algorithms (e.g., SGD, mini-batch GD)
 * More robust handling of missing values
 * GUI or interactive notebook interface
 

@@ -9,7 +9,6 @@ dependencies = [
     "numpy>=1.24",
     "pandas>=2.0",
     "seaborn>=0.12",
-    "scikit-learn>=1.7"
 ]
 
 [project.optional-dependencies]
@@ -29,13 +28,12 @@ exclude = [
 ]
 
 [project.scripts]
-# describe = "scripts.describe:main"
-# histogram = "scripts.histogram:main"
-# scatter_plot = "scripts.scatter_plot:main"
-# pair_plot = "scripts.pair_plot:main"
-train = "src.train_model:main"
-predict = "src.predict:main"
-# cheat = "cheats.cheat:main"
+describe = "src.scripts.describe:main"
+histogram = "src.scripts.histogram:main"
+scatter_plot = "src.scripts.scatter_plot:main"
+pair_plot = "src.scripts.pair_plot:main"
+logreg_train = "src.logreg_train:main"
+logreg_predict = "src.logreg_predict:main"
 
 [build-system]
 requires = ["hatchling"]

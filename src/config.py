@@ -31,7 +31,9 @@ class TrainConfig:
         )
 
     def save(self, path: str = DEFAULT_CONFIG_PATH) -> None:
-        Path(path).write_text(json.dumps(asdict(self), indent=2))
+        out = Path(path)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(asdict(self), indent=2))
 
     @classmethod
     def load(cls, path: str = DEFAULT_CONFIG_PATH) -> "TrainConfig":
@@ -50,7 +52,9 @@ class ModelArtifact:
             "preprocessor": self.preprocessor.to_dict(),
             "classifier": self.classifier.to_dict(),
         }
-        Path(path).write_text(json.dumps(payload, indent=2))
+        out = Path(path)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2))
 
     @classmethod
     def load(cls, path: str = DEFAULT_ARTIFACT_PATH) -> "ModelArtifact":

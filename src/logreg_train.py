@@ -23,11 +23,18 @@ def accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train the house classifier.")
+    parser.add_argument(
+        "dataset",
+        nargs="?",
+        help="training set (defaults to the dataset named in the config)",
+    )
     parser.add_argument("--config", default=DEFAULT_CONFIG_PATH)
     parser.add_argument("--artifact", default=DEFAULT_ARTIFACT_PATH)
     args = parser.parse_args()
 
     cfg = TrainConfig.load(args.config)
+    if args.dataset is not None:
+        cfg.dataset = args.dataset
 
     df = load_dataset(cfg.dataset)
     if cfg.feature_columns is None:
@@ -63,6 +70,8 @@ def main() -> None:
         preprocessor=pre,
         classifier=clf,
     ).save(args.artifact)
+
+    cfg.save(args.config)
     print(f"\nsaved recipe   -> {args.config}")
     print(f"saved artifact -> {args.artifact}")
 

@@ -1,8 +1,8 @@
 import sys
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils.header import LABEL_COLORS  # CORRELATION_THRESHOLD
-from utils.load_csv import load
+from ..utils.header import LABEL_COLORS  # CORRELATION_THRESHOLD
+from ..utils.load_csv import load
 
 
 def plot_features(data: pd.DataFrame, feature_1: pd.DataFrame, feature_2: pd.DataFrame):
