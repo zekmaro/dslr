@@ -118,7 +118,7 @@ val accuracy   : 0.9875  (320 rows held out)
 
 ## 🏆 Credits
 
-* **Developer:** [zekmaro](https://github.com/zekmaro)
+* **Developer:** [zekmaro](https://github.com/zekmaro) [vova](https://github.com/vilvl)
 * **Project:** Part of the 42 School curriculum
 * **Inspiration:** Kaggle-style data science pipelines
 
